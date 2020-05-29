@@ -20,8 +20,8 @@ public class Equipment {
     @ManyToOne
     private Category category;
 
-    @Column
-    private int cantAvailable = 0;
+    @Column(columnDefinition = "INTEGER DEFAULT 0")
+    private int cantAvailable;
 
     @Column(nullable = false)
     private float costPerDay;
