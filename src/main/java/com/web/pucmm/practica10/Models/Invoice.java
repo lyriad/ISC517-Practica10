@@ -21,9 +21,11 @@ public class Invoice {
     @OneToOne
     private User employee;
 
-    private float total = 0;
+    @Column(columnDefinition = "DECIMAL(9, 2) DEFAULT 0")
+    private float total;
 
-    private boolean paid = false;
+    @Column(columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private boolean paid;
 
     public Invoice() {
     }
