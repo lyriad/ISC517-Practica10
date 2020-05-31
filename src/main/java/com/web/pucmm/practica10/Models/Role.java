@@ -1,7 +1,5 @@
 package com.web.pucmm.practica10.Models;
 
-import java.util.Collection;
-
 import javax.persistence.*;
 
 @Entity
@@ -16,15 +14,19 @@ public class Role {
     @Column(nullable = false, unique = true)
     private String role;
 
-    @OneToMany
-    private Collection<Permission> permissions;
-
     public Role() {
     }
 
-    public Role(String role, Collection<Permission> permissions) {
+    public Role(String role) {
         this.role = role;
-        this.permissions = permissions;
+    }
+
+    public long getId() {
+        return this.id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getRole() {
@@ -34,13 +36,4 @@ public class Role {
     public void setRole(String role) {
         this.role = role;
     }
-
-    public Collection<Permission> getPermissions() {
-        return this.permissions;
-    }
-
-    public void setPermissions(Collection<Permission> permissions) {
-        this.permissions = permissions;
-    }
-
 }

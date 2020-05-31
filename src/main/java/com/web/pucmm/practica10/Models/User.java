@@ -1,6 +1,6 @@
 package com.web.pucmm.practica10.Models;
 
-import java.util.Collection;
+import java.util.List;
 import javax.persistence.*;
 
 @Entity
@@ -12,7 +12,7 @@ public abstract class User {
     @Column(updatable = false, nullable = false)
     private long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 11)
     private String idNumber;
 
     @Column(nullable = false)
@@ -34,7 +34,7 @@ public abstract class User {
     private String password;
 
     @OneToMany
-    private Collection<Role> roles;
+    private List<Role> roles;
 
     @Lob
     @Basic(fetch = FetchType.LAZY)
@@ -44,7 +44,7 @@ public abstract class User {
 
     }
 
-    public User(String idNumber, String name, String email, String lastName, String phone, String address, String password, Collection<Role> roles, byte[] image) {
+    public User(String idNumber, String name, String email, String lastName, String phone, String address, String password, List<Role> roles, byte[] image) {
         this.idNumber = idNumber;
         this.name = name;
         this.email = email;
@@ -54,6 +54,14 @@ public abstract class User {
         this.password = password;
         this.roles = roles;
         this.image = image;
+    }
+
+    public long getId() {
+        return this.id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getIdNumber() {
@@ -112,11 +120,11 @@ public abstract class User {
         this.password = password;
     }
 
-    public Collection<Role> getRoles() {
+    public List<Role> getRoles() {
         return this.roles;
     }
 
-    public void setRoles(Collection<Role> roles) {
+    public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
 

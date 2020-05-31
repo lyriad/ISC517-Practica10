@@ -1,6 +1,6 @@
 package com.web.pucmm.practica10.Models;
 
-import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.*;
 
@@ -13,7 +13,7 @@ public class Invoice {
     private long id;
     
     @OneToMany
-    private Collection<Rental> rentals;
+    private List<Rental> rentals;
 
     @OneToOne
     private User client;
@@ -30,7 +30,7 @@ public class Invoice {
     public Invoice() {
     }
 
-    public Invoice(Collection<Rental> rentals, User client, User employee, float total, boolean paid) {
+    public Invoice(List<Rental> rentals, User client, User employee, float total, boolean paid) {
         this.rentals = rentals;
         this.client = client;
         this.employee = employee;
@@ -46,11 +46,11 @@ public class Invoice {
         this.id = id;
     }
 
-    public Collection<Rental> getRentals() {
+    public List<Rental> getRentals() {
         return this.rentals;
     }
 
-    public void setRentals(Collection<Rental> rentals) {
+    public void setRentals(List<Rental> rentals) {
         this.rentals = rentals;
     }
 
