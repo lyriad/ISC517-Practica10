@@ -18,6 +18,9 @@ public abstract class User {
     @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false, unique = true)
+    private String email;
+
     @Column(nullable = false)
     private String lastName;
 
@@ -41,9 +44,10 @@ public abstract class User {
 
     }
 
-    public User(String idNumber, String name, String lastName, String phone, String address, String password, Collection<Role> roles, byte[] image) {
+    public User(String idNumber, String name, String email, String lastName, String phone, String address, String password, Collection<Role> roles, byte[] image) {
         this.idNumber = idNumber;
         this.name = name;
+        this.email = email;
         this.lastName = lastName;
         this.phone = phone;
         this.address = address;
@@ -66,6 +70,14 @@ public abstract class User {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getEmail() {
+        return this.email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getLastName() {
@@ -114,5 +126,5 @@ public abstract class User {
 
     public void setImage(byte[] image) {
         this.image = image;
-    }    
+    }
 }

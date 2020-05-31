@@ -13,7 +13,7 @@ public class Role {
     @Column(updatable = false, nullable = false)
     private long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String role;
 
     @OneToMany
