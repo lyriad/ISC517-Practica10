@@ -12,7 +12,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User findByEmail(String email);
     User findByLastName(String lastName);
 
-    @Query("SELECT u FROM USER u WHERE u.name = :name AND u.lastName = :lastName")
+    @Query("SELECT u FROM User u WHERE u.name = :name AND u.lastName = :lastName")
     User findByFullName(@Param("name") String name, @Param("lastName") String lastName);
     
 }

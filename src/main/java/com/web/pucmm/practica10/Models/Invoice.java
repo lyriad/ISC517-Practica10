@@ -12,7 +12,7 @@ public class Invoice {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY)
     private List<Rental> rentals;
 
     @OneToOne

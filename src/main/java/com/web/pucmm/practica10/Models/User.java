@@ -1,11 +1,11 @@
 package com.web.pucmm.practica10.Models;
 
-import java.util.List;
+import java.util.Set;
 import javax.persistence.*;
 
 @Entity
 @Table(name = "users")
-public abstract class User {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -33,8 +33,11 @@ public abstract class User {
     @Column(nullable = false)
     private String password;
 
-    @OneToMany
-    private List<Role> roles;
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
+    private boolean active;
+
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    private Set<Role> roles;
 
     @Lob
     @Basic(fetch = FetchType.LAZY)
@@ -44,7 +47,7 @@ public abstract class User {
 
     }
 
-    public User(String idNumber, String name, String email, String lastName, String phone, String address, String password, List<Role> roles, byte[] image) {
+    public User(String idNumber, String name, String email, String lastName, String phone, String address, String password, boolean active, Set<Role> roles, byte[] image) {
         this.idNumber = idNumber;
         this.name = name;
         this.email = email;
@@ -52,6 +55,7 @@ public abstract class User {
         this.phone = phone;
         this.address = address;
         this.password = password;
+        this.active = active;
         this.roles = roles;
         this.image = image;
     }
@@ -120,11 +124,23 @@ public abstract class User {
         this.password = password;
     }
 
-    public List<Role> getRoles() {
+    public boolean isActive() {
+        return this.active;
+    }
+
+    public boolean getActive() {
+        return this.active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public Set<Role> getRoles() {
         return this.roles;
     }
 
-    public void setRoles(List<Role> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 
