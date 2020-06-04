@@ -41,6 +41,10 @@ public class UserService {
         return repository.findByFullName(name, lastName);
     }
 
+    public List<User> getAllEmployees() {
+        return repository.getAllEmployees();
+    }
+
     @Transactional
     public User create(User user) {
 
