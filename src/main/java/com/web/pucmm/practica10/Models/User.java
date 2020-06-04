@@ -3,6 +3,8 @@ package com.web.pucmm.practica10.Models;
 import java.util.Set;
 import javax.persistence.*;
 
+import org.json.simple.JSONObject;
+
 @Entity
 @Table(name = "users")
 public class User {
@@ -39,15 +41,14 @@ public class User {
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Set<Role> roles;
 
-    @Lob
-    @Basic(fetch = FetchType.LAZY)
-    private byte[] image;
+    @Column
+    private String avatar;
 
     public User() {
 
     }
 
-    public User(String idNumber, String name, String email, String lastName, String phone, String address, String password, boolean active, Set<Role> roles, byte[] image) {
+    public User(String idNumber, String name, String email, String lastName, String phone, String address, String password, boolean active, Set<Role> roles, String avatar) {
         this.idNumber = idNumber;
         this.name = name;
         this.email = email;
@@ -57,7 +58,7 @@ public class User {
         this.password = password;
         this.active = active;
         this.roles = roles;
-        this.image = image;
+        this.avatar = avatar;
     }
 
     public long getId() {
@@ -82,6 +83,10 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getFullName() {
+        return String.format("%s %s", this.name, this.lastName);
     }
 
     public String getEmail() {
@@ -144,11 +149,39 @@ public class User {
         this.roles = roles;
     }
 
-    public byte[] getImage() {
-        return this.image;
+    public boolean hasRole(String name) {
+
+        boolean found = false;
+        for (Role role : this.roles) {
+            if (role.getRole().equals(name)) found = true;
+        }
+
+        return found;
     }
 
-    public void setImage(byte[] image) {
-        this.image = image;
+    public String getAvatar() {
+        return this.avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public String toJson() {
+
+        JSONObject json = new JSONObject();
+
+        json.put("id", this.id);
+        json.put("idNumber", this.idNumber);
+        json.put("name", this.name);
+        json.put("lastName", this.lastName);
+        json.put("email", this.email);
+        json.put("phone", this.phone);
+        json.put("address", this.address);
+        json.put("active", this.active);
+        json.put("role", this.roles.iterator().next().getRole());
+        json.put("avatar", this.avatar);
+
+        return json.toJSONString();
     }
 }

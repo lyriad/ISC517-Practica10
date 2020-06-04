@@ -1,5 +1,9 @@
 package com.web.pucmm.practica10.Services;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.List;
 import com.web.pucmm.practica10.Models.Role;
 import com.web.pucmm.practica10.Models.User;
 import com.web.pucmm.practica10.Repositories.UserRepository;
@@ -10,7 +14,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import java.util.*;
 
 @Service
 public class SecurityService implements UserDetailsService {
@@ -18,9 +21,13 @@ public class SecurityService implements UserDetailsService {
     private UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) {
 
         User user = userRepository.findByEmail(email);
+
+        if (user == null) throw new UsernameNotFoundException("");
+
+        if (user.hasRole("CLIENT")) throw new UsernameNotFoundException("");
 
         Set<GrantedAuthority> roles = new HashSet<GrantedAuthority>();
         for (Role role : user.getRoles()) {

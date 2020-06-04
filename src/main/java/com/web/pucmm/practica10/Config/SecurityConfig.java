@@ -15,6 +15,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
+    CustomAuthenticationSuccessHandler authenticationSuccessHandler;
+
+    @Autowired
     private SecurityService securityService;
 
     @Autowired
@@ -37,13 +40,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/auth/**", "/css/**", "/js/**", "/images/**").permitAll()
+                .antMatchers("/auth/**", "/css/**", "/js/**", "/images/**", "/vendor/**").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/").authenticated()
+                .antMatchers("/avatars/**").authenticated()
+                .antMatchers("/employees").hasAuthority("ADMIN")
                 .and()
-                .formLogin().loginPage("/auth/login").usernameParameter("email").permitAll()
+                .formLogin()
+                    .loginPage("/auth/login")
+                    .usernameParameter("email")
+                    .defaultSuccessUrl("/")
+                    .successHandler(authenticationSuccessHandler)
+                    .permitAll()
                 .and()
-                .logout().permitAll();
+                .logout().logoutUrl("/auth/logout").permitAll();
 
         http.csrf().disable();
         http.headers().frameOptions().disable();
