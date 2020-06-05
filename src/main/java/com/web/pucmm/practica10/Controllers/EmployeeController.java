@@ -49,8 +49,9 @@ public class EmployeeController {
     }
 
     @GetMapping("/register")
-    public String getRegister( Model model, @ModelAttribute("user") User user, @ModelAttribute("errors") HashMap<String, String> errors) {
+    public String getRegister( Model model, @ModelAttribute("employee") User employee, @ModelAttribute("errors") HashMap<String, String> errors) {
 
+        if ( employee.hasRole("CLIENT") ) return "redirect:/error";
         if (errors == null) model.addAttribute("errors", new HashMap<>());
         model.addAttribute("action", "Add");
 
@@ -60,20 +61,21 @@ public class EmployeeController {
     @PostMapping("/register")
     public String postRegister(RedirectAttributes attrs, @RequestParam(name = "avatar") MultipartFile[] files, @RequestParam(name = "name") String name, @RequestParam(name = "lastName") String lastName, @RequestParam(name = "idNumber") String idNumber, @RequestParam(name = "email") String email, @RequestParam(name = "phone") String phone, @RequestParam(name = "role") String role, @RequestParam(name = "address") String address, @RequestParam(name = "password") String password, @RequestParam(name = "confirmPassword") String confirmPassword) {
 
-        String avatarPath = uploadService.uploadFile(files[0], "avatars", idNumber);
+        String avatarPath = uploadService.uploadFile(files[0], "avatars");
         Role userRole = roleService.findByName(role);
 
-        User user = new User(idNumber, name, email, lastName, phone, address, encoder.encode(password), true, new HashSet<>(Arrays.asList(userRole)), avatarPath);
+        User employee = new User(idNumber, name, email, lastName, phone, address, encoder.encode(password), true, new HashSet<>(Arrays.asList(userRole)), avatarPath);
 
         Map<String, String> errors = new HashMap<String, String>();
 
-        if ( avatarPath == null || avatarPath.isEmpty() ) errors.put("avatar", "The image can\' be empty!");
         if ( userRole == null ) errors.put("role", "The selected role is invalid!");
         if ( name == null || name.isEmpty() ) errors.put("name", "The name can\' be empty!");
         if ( lastName == null || lastName.isEmpty() ) errors.put("lastName", "The last name can\' be empty!");
         if ( idNumber == null || idNumber.isEmpty() ) errors.put("idNumber", "The id number name can\' be empty!");
+        else if ( userService.existsByIdNumber(idNumber) ) errors.put("idNumber", "This id number is already taken!");
         if ( email == null || email.isEmpty() ) errors.put("email", "The email can\' be empty!");
         else if ( !emailPattern.matcher(email).matches() ) errors.put("email", "You must enter a valid email address!");
+        else if ( userService.existsByEmail(email) ) errors.put("email", "This email address is already taken!");
         if ( phone == null || phone.isEmpty() ) errors.put("phone", "The phone can\' be empty!");
         else if ( !phonePattern.matcher(phone).matches() ) errors.put("phone", "You must enter a valid phone number!");
         if ( address == null || address.isEmpty() ) errors.put("address", "The address can\' be empty!");
@@ -83,32 +85,33 @@ public class EmployeeController {
 
         if ( errors.isEmpty() ) {
 
-            userService.create(user);
-            return "redirect:/employees";
+            userService.create(employee);
+            return String.format("redirect:/employees/%s", idNumber);
         
         } else {
 
-            attrs.addFlashAttribute("user", user);
+            attrs.addFlashAttribute("employee", employee);
             attrs.addFlashAttribute("errors", errors);
             return "redirect:/employees/register";
         }
     }
 
     @GetMapping("/edit/{id_number}")
-    public String getEdit( Model model, @PathVariable String id_number, @ModelAttribute("user") User user, @ModelAttribute("errors") HashMap<String, String> errors ) {
+    public String getEdit( Model model, @PathVariable String id_number, @ModelAttribute("employee") User employee, @ModelAttribute("errors") HashMap<String, String> errors ) {
 
         try {
-            user.toJson();
+            employee.toJson();
 
         } catch ( Exception e ) {
-            user = userService.findByIdNumber(id_number);
+            employee = userService.findByIdNumber(id_number);
         }
 
-        if ( user == null) return "redirect:/404";
+        if ( employee == null) return "redirect:/error";
+        if ( employee.hasRole("CLIENT") ) return "redirect:/error";
         
         if (errors == null) model.addAttribute("errors", new HashMap<>());
 
-        model.addAttribute("user", user);
+        model.addAttribute("employee", employee);
         model.addAttribute("action", "Edit");
         model.addAttribute("id_number", id_number);
 
@@ -118,47 +121,50 @@ public class EmployeeController {
     @PostMapping("/edit/{id_number}")
     public String postEdit(RedirectAttributes attrs, @PathVariable String id_number, @RequestParam(name = "avatar") MultipartFile[] files, @RequestParam(name = "name") String name, @RequestParam(name = "lastName") String lastName, @RequestParam(name = "idNumber") String idNumber, @RequestParam(name = "email") String email, @RequestParam(name = "phone") String phone, @RequestParam(name = "role") String role, @RequestParam(name = "address") String address, @RequestParam(name = "password") String password, @RequestParam(name = "confirmPassword") String confirmPassword) {
 
-        User user = userService.findByIdNumber(id_number);
-        if ( user == null) return "redirect:/404";
+        User employee = userService.findByIdNumber(id_number);
+        if ( employee == null) return "redirect:/error";
+        if ( employee.hasRole("CLIENT") ) return "redirect:/error";
 
-        String avatarPath = uploadService.uploadFile(files[0], "avatars", idNumber);
+        String avatarPath = uploadService.uploadFile(files[0], "avatars");
         Role userRole = roleService.findByName(role);
 
         Map<String, String> errors = new HashMap<String, String>();
 
-        if ( avatarPath == null || avatarPath.isEmpty() ) errors.put("avatar", "The image can\' be empty!");
         if ( userRole == null ) errors.put("role", "The selected role is invalid!");
         if ( name == null || name.isEmpty() ) errors.put("name", "The name can\' be empty!");
         if ( lastName == null || lastName.isEmpty() ) errors.put("lastName", "The last name can\' be empty!");
         if ( idNumber == null || idNumber.isEmpty() ) errors.put("idNumber", "The id number name can\' be empty!");
+        else if ( !employee.getIdNumber().equals(idNumber) && userService.existsByIdNumber(idNumber) ) errors.put("idNumber", "This id number is already taken!");
         if ( email == null || email.isEmpty() ) errors.put("email", "The email can\' be empty!");
         else if ( !emailPattern.matcher(email).matches() ) errors.put("email", "You must enter a valid email address!");
+        else if ( !employee.getEmail().equals(email) && userService.existsByEmail(email) ) errors.put("email", "This email address is already taken!");
         if ( phone == null || phone.isEmpty() ) errors.put("phone", "The phone can\' be empty!");
         else if ( !phonePattern.matcher(phone).matches() ) errors.put("phone", "You must enter a valid phone number!");
         if ( address == null || address.isEmpty() ) errors.put("address", "The address can\' be empty!");
-        if ( password == null || password.isEmpty() ) errors.put("password", "The password can\' be empty!");
-        else if ( confirmPassword == null || confirmPassword.isEmpty() ) errors.put("confirmPassword", "You must confirm the password!");
-        else if ( !password.equals(confirmPassword) ) errors.put("confirmPassword", "The passwords do not match!");
+
+        if (password != null && !password.isEmpty() && confirmPassword != null || !confirmPassword.isEmpty() && !password.equals(confirmPassword)) {
+            errors.put("confirmPassword", "The passwords do not match!");
+        }
 
         if ( !errors.isEmpty() ) {
 
-            attrs.addFlashAttribute("user", user);
+            attrs.addFlashAttribute("employee", employee);
             attrs.addFlashAttribute("errors", errors);
             return String.format("redirect:/employees/edit/%s", idNumber);
         
         } else {
 
-            user.setIdNumber(idNumber);
-            user.setName(name);
-            user.setLastName(lastName);
-            user.setEmail(email);
-            user.setAddress(address);
-            user.setPhone(phone);
-            user.setRoles(new HashSet<>(Arrays.asList(userRole)));
-            user.setAvatar(avatarPath);
-            user.setPassword(encoder.encode(password));
+            employee.setIdNumber(idNumber);
+            employee.setName(name);
+            employee.setLastName(lastName);
+            employee.setEmail(email);
+            employee.setAddress(address);
+            employee.setPhone(phone);
+            employee.setRoles(new HashSet<>(Arrays.asList(userRole)));
+            if (avatarPath != null) employee.setAvatar(avatarPath);
+            if (password != null && !password.isEmpty()) employee.setPassword(encoder.encode(password));
 
-            userService.update(user);
+            userService.update(employee);
             return String.format("redirect:/employees/%s", idNumber);
         }
     }
@@ -166,10 +172,11 @@ public class EmployeeController {
     @GetMapping("/{id_number}")
     public String getView( Model model, @PathVariable String id_number ) {
 
-        User user = userService.findByIdNumber(id_number);
-        if ( user == null) return "redirect:/404";
+        User employee = userService.findByIdNumber(id_number);
+        if ( employee == null) return "redirect:/error";
+        if ( employee.hasRole("CLIENT") ) return "redirect:/error";
 
-        model.addAttribute("user", user);
+        model.addAttribute("employee", employee);
 
         return "/freemarker/employees/view";
     }

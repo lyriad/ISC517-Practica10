@@ -18,5 +18,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT u, r.role FROM User u JOIN u.roles r WHERE r.role = 'ADMIN' OR r.role = 'EMPLOYEE'")
     List<User> getAllEmployees();
-    
+
+    @Query("SELECT u, r.role FROM User u JOIN u.roles r WHERE r.role = 'CLIENT'")
+    List<User> getAllClients();
+
+    @Query("SELECT COUNT(1) FROM User u WHERE u.idNumber = :idNumber")
+    int existsByIdNumber(@Param("idNumber") String idNumber);
+
+    @Query("SELECT COUNT(1) FROM User u WHERE u.email = :email")
+    int existsByEmail(@Param("email") String email);
 }

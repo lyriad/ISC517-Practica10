@@ -45,6 +45,18 @@ public class UserService {
         return repository.getAllEmployees();
     }
 
+    public List<User> getAllClients() {
+        return repository.getAllClients();
+    }
+
+    public boolean existsByIdNumber(String idNumber) {
+        return repository.existsByIdNumber(idNumber) == 1;
+    };
+
+    public boolean existsByEmail(String email) {
+        return repository.existsByEmail(email) == 1;
+    };
+
     @Transactional
     public User create(User user) {
 
