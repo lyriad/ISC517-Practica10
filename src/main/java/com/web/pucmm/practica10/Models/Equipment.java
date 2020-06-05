@@ -26,15 +26,14 @@ public class Equipment {
     @Column(nullable = false)
     private float costPerDay;
 
-    @Lob
-    @Basic(fetch = FetchType.LAZY)
-    private byte[] image;
+    @Column
+    private String image;
 
     public Equipment () {
 
     }
 
-    public Equipment( String name, SubCategory subCategory, Category category, int cantAvailable, float costPerDay, byte[] image ) {
+    public Equipment( String name, SubCategory subCategory, Category category, int cantAvailable, float costPerDay, String image ) {
         this.name = name;
         this.subCategory = subCategory;
         this.category = category;
