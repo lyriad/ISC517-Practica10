@@ -24,8 +24,13 @@
                 </li>
                 <hr class="sidebar-divider"/>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" href="/categories">
                     <i class="fas fa-fw fa-th-list"></i>
+                    <span>Categories</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                    <i class="fas fa-fw fa-tools"></i>
                     <span>Equipments</span></a>
                 </li>
                 <li class="nav-item">
