@@ -58,16 +58,18 @@ public class CategoryController {
     }
 
     @GetMapping("/edit/{id}")
-    public String getEdit( Model model, @PathVariable String id, @ModelAttribute("category") Category category, @ModelAttribute("errors") HashMap<String, String> errors ) {
+    public String getEdit( Model model, @PathVariable long id, @ModelAttribute("category") Category category, @ModelAttribute("errors") HashMap<String, String> errors ) {
 
         try {
             category.toJson();
 
         } catch ( Exception e ) {
-            category = CategoryService.findById(Long.parseLong(id));
+            category = CategoryService.findById(id);
         }
 
         if ( category == null) return "redirect:/404";
+
+        System.out.println(category.toJson());
 
         if (errors == null) model.addAttribute("errors", new HashMap<>());
 
@@ -77,10 +79,10 @@ public class CategoryController {
         return "/freemarker/categories/register";
     }
 
-    @PostMapping("/edit/{id_number}")
-    public String postEdit(RedirectAttributes attrs, @PathVariable String id_number, @RequestParam(name = "name") String name, @RequestParam(name = "description") String description) {
+    @PostMapping("/edit/{id}")
+    public String postEdit(RedirectAttributes attrs, @PathVariable long id, @RequestParam(name = "name") String name, @RequestParam(name = "description") String description) {
 
-        Category category = CategoryService.findById(Long.parseLong(id_number));
+        Category category = CategoryService.findById(id);
         if ( category == null) return "redirect:/404";
 
         Map<String, String> errors = new HashMap<String, String>();
@@ -91,7 +93,7 @@ public class CategoryController {
 
             attrs.addFlashAttribute("category", category);
             attrs.addFlashAttribute("errors", errors);
-            return String.format("redirect:/categories/edit/%s", id_number );
+            return String.format("redirect:/categories/edit/%s", id );
 
         } else {
 
@@ -99,14 +101,14 @@ public class CategoryController {
             category.setDescription(description);
 
             CategoryService.update(category);
-            return String.format("redirect:/categories/%s", id_number);
+            return String.format("redirect:/categories/%s", id);
         }
     }
 
-    @GetMapping("/{id_number}")
-    public String getView( Model model, @PathVariable String id_number ) {
+    @GetMapping("/{id}")
+    public String getView( Model model, @PathVariable long id ) {
 
-        Category category = CategoryService.findById(Long.parseLong(id_number));
+        Category category = CategoryService.findById(id);
         if ( category == null) return "redirect:/404";
 
         model.addAttribute("category", category);
