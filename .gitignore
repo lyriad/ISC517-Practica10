@@ -5,6 +5,7 @@ build/
 !**/src/main/**
 !**/src/test/**
 /bin
+/src/main/resources/static/avatars
 ### STS ###
 .apt_generated
 .classpath

@@ -8,6 +8,7 @@
         <title><@title/></title>
         <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
         <link href="/vendor/Nunito/all.css" rel="stylesheet" type="text/css">
+        <link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css">
         <link href="/css/sb-admin-2.min.css" rel="stylesheet">
         <link href="/css/style.css" rel="stylesheet">
         <@styles/>
@@ -71,7 +72,7 @@
                                 <img class="img-profile rounded-circle" src="<#if Session.user.avatar??>${Session.user.avatar}<#else>/images/avatar.png</#if>">
                             </a>
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="/employees/${Session.user.idNumber}">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Profile
                                 </a>
@@ -95,6 +96,7 @@
         </a>
 
         <script src="/js/jquery.min.js"></script>
+        <script src="/js/bootstrap.min.js"></script>
         <script src="/js/bootstrap.bundle.min.js"></script>
         <script src="/js/jquery.easing.min.js"></script>
         <script src="/js/sb-admin-2.min.js"></script>
