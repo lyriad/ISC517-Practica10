@@ -6,12 +6,12 @@
 
 <#macro body>
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Employees</h1>
+        <h1 class="h3 mb-0 text-gray-800">Categories</h1>
         <a href="/employees/register" class="btn btn-primary btn-icon-split">
         <span class="icon text-white-50">
             <i class="fas fa-plus"></i>
         </span>
-            <span class="text">Add employee</span>
+            <span class="text">Add categories</span>
         </a>
     </div>
     <div class="card shadow mb-4">
@@ -20,26 +20,24 @@
                 <table class="table table-bordered" width="100%" cellspacing="0">
                     <thead>
                     <tr role="row">
-                        <th class="w-25">Id Number</th>
-                        <th class="w-50">Name</th>
-                        <th>Role</th>
+                        <th class="w-25">Name</th>
+                        <th class="w-50">Description</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <#list employees as employee>
+                    <#list categories as category>
                         <tr>
-                            <td>${employee.idNumber}</td>
-                            <td>${employee.getFullName()}</td>
-                            <td>${employee.roles?first.role}</td>
+                            <td>${category.name}</td>
+                            <td>${category.description}</td>
                             <td class="d-flex justify-content-between">
-                                <a href="/employees/${employee.idNumber}" class="btn btn-info btn-icon-split">
+                                <a href="/categories/${category.id}" class="btn btn-info btn-icon-split">
                                 <span class="icon text-white-50">
                                 <i class="fas fa-eye"></i>
                                 </span>
                                     <span class="text">View</span>
                                 </a>
-                                <a href="/employees/edit/${employee.idNumber}" class="btn btn-warning btn-icon-split">
+                                <a href="/categories/edit/${category.id}" class="btn btn-warning btn-icon-split">
                                 <span class="icon text-white-50">
                                 <i class="fas fa-edit"></i>
                                 </span>
