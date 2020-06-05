@@ -24,14 +24,22 @@
                 </li>
                 <hr class="sidebar-divider"/>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
-                    <i class="fas fa-fw fa-th-list"></i>
-                    <span>Equipments</span></a>
+                    <a class="nav-link" href="/categories">
+                        <i class="fas fa-fw fa-th-list"></i>
+                        <span>Categories</span>
+                    </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">
-                    <i class="fas fa-fw fa-truck"></i>
-                    <span>Rentals</span></a>
+                        <i class="fas fa-fw fa-tools"></i>
+                        <span>Equipments</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <i class="fas fa-fw fa-truck"></i>
+                        <span>Rentals</span>
+                    </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">
@@ -40,21 +48,24 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">
-                    <i class="fas fa-fw fa-users"></i>
-                    <span>Clients</span></a>
+                        <i class="fas fa-fw fa-users"></i>
+                        <span>Clients</span>
+                    </a>
                 </li>
                 <#if Session.user.hasRole('ADMIN')>
                 <li class="nav-item">
                     <a class="nav-link" href="/employees">
-                    <i class="fas fa-fw fa-user-tie"></i>
-                    <span>Employees</span></a>
+                        <i class="fas fa-fw fa-user-tie"></i>
+                        <span>Employees</span>
+                    </a>
                 </li>
                 </#if>
                 <hr class="sidebar-divider"/>
                 <li class="nav-item">
                     <a class="nav-link" href="/auth/logout">
-                    <i class="fas fa-fw fa-sign-out-alt"></i>
-                    <span>Logout</span></a>
+                        <i class="fas fa-fw fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </a>
                 </li>
             </ul>
             <div id="content-wrapper" class="d-flex flex-column">

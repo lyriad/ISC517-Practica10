@@ -2,6 +2,8 @@ package com.web.pucmm.practica10.Models;
 
 import javax.persistence.*;
 
+import org.json.simple.JSONObject;
+
 @Entity
 @Table(name = "categories")
 public class Category {
@@ -24,6 +26,17 @@ public class Category {
     public Category(String name, String description) {
         this.name = name;
         this.description = description;
+    }
+
+    public String toJson() {
+
+        JSONObject json = new JSONObject();
+
+        json.put("id", this.id);
+        json.put("name", this.name);
+        json.put("description", this.description);
+
+        return json.toJSONString();
     }
 
     public long getId() {
