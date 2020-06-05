@@ -7,11 +7,11 @@
 <#macro body>
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Categories</h1>
-        <a href="/employees/register" class="btn btn-primary btn-icon-split">
+        <a href="/categories/register" class="btn btn-primary btn-icon-split">
         <span class="icon text-white-50">
             <i class="fas fa-plus"></i>
         </span>
-            <span class="text">Add categories</span>
+            <span class="text">Add category</span>
         </a>
     </div>
     <div class="card shadow mb-4">

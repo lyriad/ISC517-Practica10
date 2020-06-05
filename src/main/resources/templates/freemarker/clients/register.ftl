@@ -1,6 +1,6 @@
 <#include "../base.ftl"/>
 
-<#macro title>Add client</#macro>
+<#macro title>${action} client</#macro>
 
 <#macro styles></#macro>
 

@@ -17,11 +17,11 @@ import java.util.Map;
 public class CategoryController {
 
     @Autowired
-    CategoryService CategoryService;
+    CategoryService categoryService;
 
     @GetMapping
     public String list( Model model) {
-        model.addAttribute("categories", CategoryService.all());
+        model.addAttribute("categories", categoryService.all());
 
         return "/freemarker/categories/list";
     }
@@ -42,11 +42,11 @@ public class CategoryController {
 
         Map<String, String> errors = new HashMap<String, String>();
 
-        if ( name == null || name.isEmpty() ) errors.put("name", "The name can\' be empty!");
+        if ( name == null || name.isEmpty() ) errors.put("name", "The name can\'t be empty!");
 
         if ( errors.isEmpty() ) {
 
-            CategoryService.create(category);
+            categoryService.create(category);
             return "redirect:/categories";
 
         } else {
@@ -57,20 +57,19 @@ public class CategoryController {
         }
     }
 
-    @GetMapping("/edit/{id}")
-    public String getEdit( Model model, @PathVariable long id, @ModelAttribute("category") Category category, @ModelAttribute("errors") HashMap<String, String> errors ) {
+    @GetMapping("/edit/{id_category}")
+    public String getEdit( Model model, @PathVariable long id_category, @ModelAttribute("category") Category category, @ModelAttribute("errors") HashMap<String, String> errors ) {
 
         try {
-            category.toJson();
+            category.getName().isEmpty();
 
         } catch ( Exception e ) {
-            category = CategoryService.findById(id);
+            category = categoryService.findById(id_category);
         }
-
-        if ( category == null) return "redirect:/404";
-
+        
+        if ( category == null) return "redirect:/error";
         System.out.println(category.toJson());
-
+        
         if (errors == null) model.addAttribute("errors", new HashMap<>());
 
         model.addAttribute("category", category);
@@ -79,37 +78,37 @@ public class CategoryController {
         return "/freemarker/categories/register";
     }
 
-    @PostMapping("/edit/{id}")
-    public String postEdit(RedirectAttributes attrs, @PathVariable long id, @RequestParam(name = "name") String name, @RequestParam(name = "description") String description) {
+    @PostMapping("/edit/{id_category}")
+    public String postEdit(RedirectAttributes attrs, @PathVariable long id_category, @RequestParam(name = "name") String name, @RequestParam(name = "description") String description) {
 
-        Category category = CategoryService.findById(id);
-        if ( category == null) return "redirect:/404";
+        Category category = categoryService.findById(id_category);
+        if ( category == null) return "redirect:/error";
 
         Map<String, String> errors = new HashMap<String, String>();
 
-        if ( name == null || name.isEmpty() ) errors.put("name", "The name can\' be empty!");
+        if ( name == null || name.isEmpty() ) errors.put("name", "The name can\'t be empty!");
 
         if ( !errors.isEmpty() ) {
 
             attrs.addFlashAttribute("category", category);
             attrs.addFlashAttribute("errors", errors);
-            return String.format("redirect:/categories/edit/%s", id );
+            return String.format("redirect:/categories/edit/%s", id_category );
 
         } else {
 
             category.setName(name);
             category.setDescription(description);
 
-            CategoryService.update(category);
-            return String.format("redirect:/categories/%s", id);
+            categoryService.update(category);
+            return String.format("redirect:/categories/%s", id_category);
         }
     }
 
-    @GetMapping("/{id}")
-    public String getView( Model model, @PathVariable long id ) {
+    @GetMapping("/{id_category}")
+    public String getView( Model model, @PathVariable long id_category ) {
 
-        Category category = CategoryService.findById(id);
-        if ( category == null) return "redirect:/404";
+        Category category = categoryService.findById(id_category);
+        if ( category == null) return "redirect:/error";
 
         model.addAttribute("category", category);
 

@@ -1,6 +1,6 @@
 <#include "../base.ftl"/>
 
-<#macro title>Add employee</#macro>
+<#macro title>${action} employee</#macro>
 
 <#macro styles></#macro>
 
