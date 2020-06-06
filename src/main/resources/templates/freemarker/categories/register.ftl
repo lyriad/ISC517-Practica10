@@ -24,6 +24,7 @@
                 <textarea id="description" name="description" class="form-control form-control-user" rows="5" placeholder="Category description"><#if (category.description)??>${category.description}</#if></textarea>
                 <small class="form-text text-muted">Optional</small>
             </div>
+        </div>
     </div>
     <button type="submit" class="btn btn-primary btn-user mb-4 btn-block w-50 mx-auto">
         ${action} category

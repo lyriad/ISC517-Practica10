@@ -30,8 +30,8 @@
                         <tr>
                             <td>${category.name}</td>
                             <td>${category.description}</td>
-                            <td class="d-flex justify-content-between">
-                                <a href="/categories/${category.id}" class="btn btn-info btn-icon-split">
+                            <td class="d-flex">
+                                <a href="/categories/${category.id}/subcategories" class="btn btn-info btn-icon-split">
                                 <span class="icon text-white-50">
                                 <i class="fas fa-eye"></i>
                                 </span>
