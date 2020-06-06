@@ -72,11 +72,12 @@
             <div class="card-body">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Pending Requests</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1"><@spring.message "dashboard.pending-invoices" /></div>
+                        <div class="spinner-border" role="status" id="pending-invoices-spinner"></div>
+                        <div id="pending-invoices-amount" class="d-none h5 mb-0 font-weight-bold text-gray-800"></div>
                     </div>
                     <div class="col-auto">
-                        <i class="fas fa-comments fa-2x text-gray-300"></i>
+                        <i class="fas fa-file-invoice-dollar fa-2x text-gray-300"></i>
                     </div>
                 </div>
             </div>
@@ -87,8 +88,22 @@
 
 <#macro scripts>
 <script src="/js/chart.min.js"></script>
-<script src="/js/chart-area-demo.js"></script>
-<script src="/js/chart-pie-demo.js"></script>
+<script>
+$(document).ready( () => {   
+    $.ajax({
+        url: "/api/employees/${Session.user.id}/invoices/pending",
+        method:'GET', 
+            success: amount => {
+            $('#pending-invoices-spinner').remove()
+            $('#pending-invoices-amount').removeClass('d-none').text(amount)
+
+        }, error: () => {
+            $('#pending-invoices-spinner').remove()
+            $('#pending-invoices-amount').removeClass('d-none').text('Error')
+        }
+    });
+});
+</script>
 </#macro>
 
 <@page/>

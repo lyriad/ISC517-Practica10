@@ -51,11 +51,15 @@ public class UserService {
 
     public boolean existsByIdNumber(String idNumber) {
         return repository.existsByIdNumber(idNumber) == 1;
-    };
+    }
 
     public boolean existsByEmail(String email) {
         return repository.existsByEmail(email) == 1;
-    };
+    }
+
+    public int getCountPendingInvoices(long id_employee) {
+        return repository.getCountPendingInvoices(id_employee);
+    }
 
     @Transactional
     public User create(User user) {
