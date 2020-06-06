@@ -20,41 +20,41 @@
                 <li class="nav-item active">
                     <a class="nav-link" href="/">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Dashboard</span></a>
+                    <span><@spring.message "dashboard" /></span></a>
                 </li>
                 <hr class="sidebar-divider"/>
                 <li class="nav-item">
                     <a class="nav-link" href="#">
                     <i class="fas fa-fw fa-th-list"></i>
-                    <span>Equipments</span></a>
+                    <span><@spring.message "equipments.plural.up" /></span></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">
                     <i class="fas fa-fw fa-truck"></i>
-                    <span>Rentals</span></a>
+                    <span><@spring.message "rentals.plural.up" /></span></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">
                     <i class="fas fa-fw fa-file-invoice-dollar"></i>
-                    <span>Invoices</span></a>
+                    <span><@spring.message "invoice.plural.up" /></span></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/clients">
                     <i class="fas fa-fw fa-users"></i>
-                    <span>Clients</span></a>
+                    <span><@spring.message "client.plural.up" /></span></a>
                 </li>
                 <#if Session.user.hasRole('ADMIN')>
                 <li class="nav-item">
                     <a class="nav-link" href="/employees">
                     <i class="fas fa-fw fa-user-tie"></i>
-                    <span>Employees</span></a>
+                    <span><@spring.message "employee.plural.up" /></span></a>
                 </li>
                 </#if>
                 <hr class="sidebar-divider"/>
                 <li class="nav-item">
                     <a class="nav-link" href="/auth/logout">
                     <i class="fas fa-fw fa-sign-out-alt"></i>
-                    <span>Logout</span></a>
+                    <span><@spring.message "base.logout" /></span></a>
                 </li>
             </ul>
             <div id="content-wrapper" class="d-flex flex-column">
@@ -74,12 +74,32 @@
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
                                 <a class="dropdown-item" href="/employees/${Session.user.idNumber}">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Profile
+                                    <@spring.message "base.profile" />
                                 </a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="/auth/logout">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Logout
+                                    <@spring.message "base.logout" />
+                                </a>
+                            </div>
+                        </li>
+                        <div class="topbar-divider d-none d-sm-block"></div>
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="localeDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">
+                                    <@spring.message "base.language" />
+                                    <i class="fas fa-sort-down fa-fw text-gray-400"></i>
+                                </span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="localeDropdown">
+                                <a class="dropdown-item" href="${rc.requestUri}?lang=en">
+                                    <img class="w-25 m-0 mr-2 p-0" src="/images/icons/en.svg">
+                                    English
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="${rc.requestUri}?lang=es">
+                                    <img class="w-25 m-0 mr-2 p-0" src="/images/icons/es.svg">
+                                    Español
                                 </a>
                             </div>
                         </li>

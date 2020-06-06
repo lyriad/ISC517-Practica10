@@ -1,12 +1,12 @@
 <#include "base.ftl"/>
 
-<#macro title>Dashboard</#macro>
+<#macro title><@spring.message "dashboard" /></#macro>
 
 <#macro styles></#macro>
 
 <#macro body>
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+    <h1 class="h3 mb-0 text-gray-800"><@spring.message "dashboard" /></h1>
 </div>
 
 <div class="row">
