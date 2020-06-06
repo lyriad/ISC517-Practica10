@@ -3,6 +3,7 @@ package com.web.pucmm.practica10.Controllers;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Pattern;
 import com.web.pucmm.practica10.Models.Role;
@@ -11,6 +12,7 @@ import com.web.pucmm.practica10.Services.FileUploadService;
 import com.web.pucmm.practica10.Services.RoleService;
 import com.web.pucmm.practica10.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,12 +38,15 @@ public class EmployeeController {
     @Autowired
     RoleService roleService;
 
+    @Autowired
+    private MessageSource messageSource;
+
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
     private Pattern emailPattern = Pattern.compile("^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$");
     private Pattern phonePattern = Pattern.compile("^(\\+\\d{1,3}( )?)?((\\(\\d{3}\\))|\\d{3})[- .]?\\d{3}[- .]?\\d{4}$");
     
     @GetMapping
-    public String list( Model model) {
+    public String list( Model model ) {
 
         model.addAttribute("employees", userService.getAllEmployees());
 
@@ -51,7 +56,6 @@ public class EmployeeController {
     @GetMapping("/register")
     public String getRegister( Model model, @ModelAttribute("employee") User employee, @ModelAttribute("errors") HashMap<String, String> errors) {
 
-        if ( employee.hasRole("CLIENT") ) return "redirect:/error";
         if (errors == null) model.addAttribute("errors", new HashMap<>());
         model.addAttribute("action", "Add");
 
@@ -59,7 +63,7 @@ public class EmployeeController {
     }
 
     @PostMapping("/register")
-    public String postRegister(RedirectAttributes attrs, @RequestParam(name = "avatar") MultipartFile[] files, @RequestParam(name = "name") String name, @RequestParam(name = "lastName") String lastName, @RequestParam(name = "idNumber") String idNumber, @RequestParam(name = "email") String email, @RequestParam(name = "phone") String phone, @RequestParam(name = "role") String role, @RequestParam(name = "address") String address, @RequestParam(name = "password") String password, @RequestParam(name = "confirmPassword") String confirmPassword) {
+    public String postRegister(RedirectAttributes attrs, Locale locale, @RequestParam(name = "avatar") MultipartFile[] files, @RequestParam(name = "name") String name, @RequestParam(name = "lastName") String lastName, @RequestParam(name = "idNumber") String idNumber, @RequestParam(name = "email") String email, @RequestParam(name = "phone") String phone, @RequestParam(name = "role") String role, @RequestParam(name = "address") String address, @RequestParam(name = "password") String password, @RequestParam(name = "confirmPassword") String confirmPassword) {
 
         String avatarPath = uploadService.uploadFile(files[0], "avatars");
         Role userRole = roleService.findByName(role);
@@ -68,20 +72,20 @@ public class EmployeeController {
 
         Map<String, String> errors = new HashMap<String, String>();
 
-        if ( userRole == null ) errors.put("role", "The selected role is invalid!");
-        if ( name == null || name.isEmpty() ) errors.put("name", "The name can\' be empty!");
-        if ( lastName == null || lastName.isEmpty() ) errors.put("lastName", "The last name can\' be empty!");
-        if ( idNumber == null || idNumber.isEmpty() ) errors.put("idNumber", "The id number name can\' be empty!");
-        else if ( userService.existsByIdNumber(idNumber) ) errors.put("idNumber", "This id number is already taken!");
-        if ( email == null || email.isEmpty() ) errors.put("email", "The email can\' be empty!");
-        else if ( !emailPattern.matcher(email).matches() ) errors.put("email", "You must enter a valid email address!");
-        else if ( userService.existsByEmail(email) ) errors.put("email", "This email address is already taken!");
-        if ( phone == null || phone.isEmpty() ) errors.put("phone", "The phone can\' be empty!");
-        else if ( !phonePattern.matcher(phone).matches() ) errors.put("phone", "You must enter a valid phone number!");
-        if ( address == null || address.isEmpty() ) errors.put("address", "The address can\' be empty!");
-        if ( password == null || password.isEmpty() ) errors.put("password", "The password can\' be empty!");
-        else if ( confirmPassword == null || confirmPassword.isEmpty() ) errors.put("confirmPassword", "You must confirm the password!");
-        else if ( !password.equals(confirmPassword) ) errors.put("confirmPassword", "The passwords do not match!");
+        if ( userRole == null ) errors.put("role", messageSource.getMessage("employee.form.error.role.invalid", null, locale));
+        if ( name == null || name.isEmpty() ) errors.put("name", messageSource.getMessage("form.error.name.empty", null, locale));
+        if ( lastName == null || lastName.isEmpty() ) errors.put("lastName", messageSource.getMessage("form.error.lastName.empty", null, locale));
+        if ( idNumber == null || idNumber.isEmpty() ) errors.put("idNumber", messageSource.getMessage("form.error.idNumber.empty", null, locale));
+        else if ( userService.existsByIdNumber(idNumber) ) errors.put("idNumber", messageSource.getMessage("form.error.idNumber.taken", null, locale));
+        if ( email == null || email.isEmpty() ) errors.put("email", messageSource.getMessage("form.error.email.empty", null, locale));
+        else if ( !emailPattern.matcher(email).matches() ) errors.put("email", messageSource.getMessage("form.error.email.invalid", null, locale));
+        else if ( userService.existsByEmail(email) ) errors.put("email", messageSource.getMessage("form.error.email.taken", null, locale));
+        if ( phone == null || phone.isEmpty() ) errors.put("phone", messageSource.getMessage("form.error.phone.empty", null, locale));
+        else if ( !phonePattern.matcher(phone).matches() ) errors.put("phone", messageSource.getMessage("form.error.phone.invalid", null, locale));
+        if ( address == null || address.isEmpty() ) errors.put("address", messageSource.getMessage("form.error.address.empty", null, locale));
+        if ( password == null || password.isEmpty() ) errors.put("password", messageSource.getMessage("form.error.password.empty", null, locale));
+        else if ( confirmPassword == null || confirmPassword.isEmpty() ) errors.put("confirmPassword", messageSource.getMessage("form.error.confirmPassword.empty", null, locale));
+        else if ( !password.equals(confirmPassword) ) errors.put("confirmPassword", messageSource.getMessage("form.error.confirmPassword.match", null, locale));
 
         if ( errors.isEmpty() ) {
 
@@ -119,7 +123,7 @@ public class EmployeeController {
     }
 
     @PostMapping("/edit/{id_number}")
-    public String postEdit(RedirectAttributes attrs, @PathVariable String id_number, @RequestParam(name = "avatar") MultipartFile[] files, @RequestParam(name = "name") String name, @RequestParam(name = "lastName") String lastName, @RequestParam(name = "idNumber") String idNumber, @RequestParam(name = "email") String email, @RequestParam(name = "phone") String phone, @RequestParam(name = "role") String role, @RequestParam(name = "address") String address, @RequestParam(name = "password") String password, @RequestParam(name = "confirmPassword") String confirmPassword) {
+    public String postEdit(RedirectAttributes attrs, Locale locale, @PathVariable String id_number, @RequestParam(name = "avatar") MultipartFile[] files, @RequestParam(name = "name") String name, @RequestParam(name = "lastName") String lastName, @RequestParam(name = "idNumber") String idNumber, @RequestParam(name = "email") String email, @RequestParam(name = "phone") String phone, @RequestParam(name = "role") String role, @RequestParam(name = "address") String address, @RequestParam(name = "password") String password, @RequestParam(name = "confirmPassword") String confirmPassword) {
 
         User employee = userService.findByIdNumber(id_number);
         if ( employee == null) return "redirect:/error";
@@ -130,20 +134,20 @@ public class EmployeeController {
 
         Map<String, String> errors = new HashMap<String, String>();
 
-        if ( userRole == null ) errors.put("role", "The selected role is invalid!");
-        if ( name == null || name.isEmpty() ) errors.put("name", "The name can\' be empty!");
-        if ( lastName == null || lastName.isEmpty() ) errors.put("lastName", "The last name can\' be empty!");
-        if ( idNumber == null || idNumber.isEmpty() ) errors.put("idNumber", "The id number name can\' be empty!");
-        else if ( !employee.getIdNumber().equals(idNumber) && userService.existsByIdNumber(idNumber) ) errors.put("idNumber", "This id number is already taken!");
-        if ( email == null || email.isEmpty() ) errors.put("email", "The email can\' be empty!");
-        else if ( !emailPattern.matcher(email).matches() ) errors.put("email", "You must enter a valid email address!");
-        else if ( !employee.getEmail().equals(email) && userService.existsByEmail(email) ) errors.put("email", "This email address is already taken!");
-        if ( phone == null || phone.isEmpty() ) errors.put("phone", "The phone can\' be empty!");
-        else if ( !phonePattern.matcher(phone).matches() ) errors.put("phone", "You must enter a valid phone number!");
-        if ( address == null || address.isEmpty() ) errors.put("address", "The address can\' be empty!");
+        if ( userRole == null ) errors.put("role", messageSource.getMessage("employee.form.error.role.invalid", null, locale));
+        if ( name == null || name.isEmpty() ) errors.put("name", messageSource.getMessage("form.error.name.empty", null, locale));
+        if ( lastName == null || lastName.isEmpty() ) errors.put("lastName", messageSource.getMessage("form.error.lastName.empty", null, locale));
+        if ( idNumber == null || idNumber.isEmpty() ) errors.put("idNumber", messageSource.getMessage("form.error.idNumber.empty", null, locale));
+        else if ( !employee.getIdNumber().equals(idNumber) && userService.existsByIdNumber(idNumber) ) errors.put("idNumber", messageSource.getMessage("form.error.idNumber.taken", null, locale));
+        if ( email == null || email.isEmpty() ) errors.put("email", messageSource.getMessage("form.error.email.empty", null, locale));
+        else if ( !emailPattern.matcher(email).matches() ) errors.put("email", messageSource.getMessage("form.error.email.invalid", null, locale));
+        else if ( !employee.getEmail().equals(email) && userService.existsByEmail(email) ) errors.put("email", messageSource.getMessage("form.error.email.taken", null, locale));
+        if ( phone == null || phone.isEmpty() ) errors.put("phone", messageSource.getMessage("form.error.phone.empty", null, locale));
+        else if ( !phonePattern.matcher(phone).matches() ) errors.put("phone", messageSource.getMessage("form.error.phone.invalid", null, locale));
+        if ( address == null || address.isEmpty() ) errors.put("address", messageSource.getMessage("form.error.address.empty", null, locale));
 
         if (password != null && !password.isEmpty() && confirmPassword != null || !confirmPassword.isEmpty() && !password.equals(confirmPassword)) {
-            errors.put("confirmPassword", "The passwords do not match!");
+            errors.put("confirmPassword", messageSource.getMessage("form.error.confirmPassword.match", null, locale));
         }
 
         if ( !errors.isEmpty() ) {
