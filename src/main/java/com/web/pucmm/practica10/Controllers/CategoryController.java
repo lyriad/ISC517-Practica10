@@ -74,7 +74,6 @@ public class CategoryController {
         }
         
         if ( category == null) return "redirect:/error";
-        System.out.println(category.toJson());
         
         if (errors == null) model.addAttribute("errors", new HashMap<>());
 

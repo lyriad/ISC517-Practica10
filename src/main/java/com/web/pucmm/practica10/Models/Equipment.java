@@ -2,6 +2,8 @@ package com.web.pucmm.practica10.Models;
 
 import javax.persistence.*;
 
+import org.json.simple.JSONObject;
+
 @Entity
 @Table(name = "equipments")
 public class Equipment {
@@ -66,6 +68,14 @@ public class Equipment {
         this.subCategory = subCategory;
     }
 
+    public Category getCategory() {
+        return this.category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
     public int getCantAvailable() {
         return this.cantAvailable;
     }
@@ -89,4 +99,20 @@ public class Equipment {
     public void setImage(String image) {
         this.image = image;
     }
+
+    public String toJson() {
+
+        JSONObject json = new JSONObject();
+
+        json.put("id", this.id);
+        json.put("name", this.name);
+        json.put("category", this.category);
+        json.put("subCategory", this.subCategory);
+        json.put("cantAvailable", this.cantAvailable);
+        json.put("costPerDay", this.costPerDay);
+        json.put("image", this.image);
+
+        return json.toJSONString();
+    }
+
 }

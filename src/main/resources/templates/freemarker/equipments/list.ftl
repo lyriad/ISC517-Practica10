@@ -31,17 +31,17 @@
                     <#list equipments as equipment>
                     <tr>
                         <td>${equipment.name}</td>
-                        <td>${equipment.Subcategory.name}</td>
+                        <td>${equipment.getSubCategory().getName()}</td>
                         <td>${equipment.cantAvailable}</td>
                         <td>${equipment.costPerDay}</td>
-                        <td class="d-flex justify-content-between">
+                        <td class="d-flex">
                             <a href="#" class="btn btn-info btn-icon-split">
                                 <span class="icon text-white-50">
                                 <i class="fas fa-eye"></i>
                                 </span>
                                 <span class="text">View</span>
                             </a>
-                            <a href="#" class="btn btn-warning btn-icon-split">
+                            <a href="/equipments/edit/${equipment.id}" class="btn btn-warning btn-icon-split">
                                 <span class="icon text-white-50">
                                 <i class="fas fa-edit"></i>
                                 </span>

@@ -8,7 +8,7 @@
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">${action} equipment</h1>
 </div>
-<form method="POST" action=<#if action == "Add">"/equipment/register"<#else>"/equipment/edit/${id_number}"</#if> enctype="multipart/form-data">
+<form method="POST" action=<#if action == "Add">"/equipments/register"<#else>"/equipments/edit/${id}"</#if> enctype="multipart/form-data">
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">Equipment information</h6>
@@ -38,24 +38,20 @@
                     <div class="form-group row">
                         <div class="col-sm-6 mb-3 mb-sm-0">
                             <label class="text-dark">Category</label>
-                            <select name="id_category" id="category-select" class="form-control form-control-user <#if (errors.idNumber)??>is-invalid</#if>" required>
+                            <select name="id_category" id="category-select" class="form-control form-control-user <#if (errors.id_category)??>is-invalid</#if>" required>
                                 <#if action == 'Add' ><option>Choose a Category</option></#if>
                                 <#list categories as category>
-                                    <#if action == 'Edit' > 
-                                        <option value="${category.id}" <#if equipment.category.id == category.id > selected </#if> > ${category.name} </option>
-                                    <#else>
-                                        <option value="${category.id}"> ${category.name} </option>
-                                    </#if>
+                                    <option value="${category.id}"> ${category.name} </option>
                                 </#list>
                             </select>
-                            <#if (errors.category)??><div class="invalid-feedback">${errors.category}</div></#if>
+                            <#if (errors.id_category)??><div class="invalid-feedback">${errors.id_category}</div></#if>
                         </div>
                         <div class="col-sm-6 mb-3 mb-sm-0">
                             <label class="text-dark">Subcategory</label>
                             <select name="id_subcategory" id="subcategory-select" class="form-control form-control-user <#if (errors.idNumber)??>is-invalid</#if>" required>
                                 <option value="" selected>Choose a Subcategory</option>
                             </select>
-                            <#if (errors.subcategory)??><div class="invalid-feedback">${errors.subcategory}</div></#if>
+                            <#if (errors.id_subcategory)??><div class="invalid-feedback">${errors.id_subcategory}</div></#if>
                         </div>
                     </div>
                     <div class="form-group row">
