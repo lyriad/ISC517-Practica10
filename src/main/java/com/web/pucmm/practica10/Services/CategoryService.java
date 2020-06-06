@@ -26,8 +26,8 @@ public class CategoryService {
         return repository.findByName(name);
     }
 
-    public List<SubCategory> getSubCategories(Category category) {
-        return repository.getSubCategoriesByCategory(category.getId());
+    public List<SubCategory> getSubCategories(long id_category) {
+        return repository.getSubCategoriesByCategory(id_category);
     }
 
     @Transactional
