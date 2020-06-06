@@ -19,7 +19,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         CookieLocaleResolver resolver= new CookieLocaleResolver();
         resolver.setCookieName("locale");
         resolver.setDefaultLocale(new Locale("es"));
-        resolver.setCookieMaxAge(60 * 60); 
+        resolver.setCookieMaxAge(24 * 60 * 60); 
         return resolver;
     }
 
@@ -39,5 +39,4 @@ public class WebMvcConfig implements WebMvcConfigurer {
         localeInterceptor.setParamName("lang");
         registry.addInterceptor(localeInterceptor);
     }
-     
 }
