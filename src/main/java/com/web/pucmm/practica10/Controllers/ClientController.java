@@ -3,6 +3,7 @@ package com.web.pucmm.practica10.Controllers;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Pattern;
 import com.web.pucmm.practica10.Models.Role;
@@ -11,6 +12,7 @@ import com.web.pucmm.practica10.Services.FileUploadService;
 import com.web.pucmm.practica10.Services.RoleService;
 import com.web.pucmm.practica10.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,6 +37,9 @@ public class ClientController {
     @Autowired
     RoleService roleService;
 
+    @Autowired
+    private MessageSource messageSource;
+
     private Pattern emailPattern = Pattern.compile("^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$");
     private Pattern phonePattern = Pattern.compile("^(\\+\\d{1,3}( )?)?((\\(\\d{3}\\))|\\d{3})[- .]?\\d{3}[- .]?\\d{4}$");
     
@@ -58,23 +63,23 @@ public class ClientController {
     }
 
     @PostMapping("/register")
-    public String postRegister(RedirectAttributes attrs, @RequestParam(name = "avatar") MultipartFile[] files, @RequestParam(name = "name") String name, @RequestParam(name = "lastName") String lastName, @RequestParam(name = "idNumber") String idNumber, @RequestParam(name = "email") String email, @RequestParam(name = "phone") String phone, @RequestParam(name = "address") String address) {
+    public String postRegister(RedirectAttributes attrs, Locale locale,  @RequestParam(name = "avatar") MultipartFile[] files, @RequestParam(name = "name") String name, @RequestParam(name = "lastName") String lastName, @RequestParam(name = "idNumber") String idNumber, @RequestParam(name = "email") String email, @RequestParam(name = "phone") String phone, @RequestParam(name = "address") String address) {
 
         String avatarPath = uploadService.uploadFile(files[0], "avatars");
         Role clientRole = roleService.findByName("CLIENT");
 
         Map<String, String> errors = new HashMap<String, String>();
 
-        if ( name == null || name.isEmpty() ) errors.put("name", "The name can\' be empty!");
-        if ( lastName == null || lastName.isEmpty() ) errors.put("lastName", "The last name can\' be empty!");
-        if ( idNumber == null || idNumber.isEmpty() ) errors.put("idNumber", "The id number name can\' be empty!");
-        else if ( userService.existsByIdNumber(idNumber) ) errors.put("idNumber", "This id number is already taken!");
-        if ( email == null || email.isEmpty() ) errors.put("email", "The email can\' be empty!");
-        else if ( !emailPattern.matcher(email).matches() ) errors.put("email", "You must enter a valid email address!");
-        else if ( userService.existsByEmail(email) ) errors.put("email", "This email address is already taken!");
-        if ( phone == null || phone.isEmpty() ) errors.put("phone", "The phone can\' be empty!");
-        else if ( !phonePattern.matcher(phone).matches() ) errors.put("phone", "You must enter a valid phone number!");
-        if ( address == null || address.isEmpty() ) errors.put("address", "The address can\' be empty!");
+        if ( name == null || name.isEmpty() ) errors.put("name", messageSource.getMessage("form.error.name.empty", null, locale));
+        if ( lastName == null || lastName.isEmpty() ) errors.put("lastName", messageSource.getMessage("form.error.lastName.empty", null, locale));
+        if ( idNumber == null || idNumber.isEmpty() ) errors.put("idNumber", messageSource.getMessage("form.error.idNumber.empty", null, locale));
+        else if ( userService.existsByIdNumber(idNumber) ) errors.put("idNumber", messageSource.getMessage("form.error.idNumber.taken", null, locale));
+        if ( email == null || email.isEmpty() ) errors.put("email", messageSource.getMessage("form.error.email.empty", null, locale));
+        else if ( !emailPattern.matcher(email).matches() ) errors.put("email", messageSource.getMessage("form.error.email.invalid", null, locale));
+        else if ( userService.existsByEmail(email) ) errors.put("email", messageSource.getMessage("form.error.email.taken", null, locale));
+        if ( phone == null || phone.isEmpty() ) errors.put("phone", messageSource.getMessage("form.error.phone.empty", null, locale));
+        else if ( !phonePattern.matcher(phone).matches() ) errors.put("phone", messageSource.getMessage("form.error.phone.invalid", null, locale));
+        if ( address == null || address.isEmpty() ) errors.put("address", messageSource.getMessage("form.error.address.empty", null, locale));
 
         User client = new User(idNumber, name, email, lastName, phone, address, "", true, new HashSet<>(Arrays.asList(clientRole)), avatarPath);
 
@@ -114,7 +119,7 @@ public class ClientController {
     }
 
     @PostMapping("/edit/{id_number}")
-    public String postEdit(RedirectAttributes attrs, @PathVariable String id_number, @RequestParam(name = "avatar") MultipartFile[] files, @RequestParam(name = "name") String name, @RequestParam(name = "lastName") String lastName, @RequestParam(name = "idNumber") String idNumber, @RequestParam(name = "email") String email, @RequestParam(name = "phone") String phone, @RequestParam(name = "address") String address) {
+    public String postEdit(RedirectAttributes attrs, Locale locale, @PathVariable String id_number, @RequestParam(name = "avatar") MultipartFile[] files, @RequestParam(name = "name") String name, @RequestParam(name = "lastName") String lastName, @RequestParam(name = "idNumber") String idNumber, @RequestParam(name = "email") String email, @RequestParam(name = "phone") String phone, @RequestParam(name = "address") String address) {
 
         User client = userService.findByIdNumber(id_number);
         if ( client == null) return "redirect:/error";
@@ -125,16 +130,16 @@ public class ClientController {
 
         Map<String, String> errors = new HashMap<String, String>();
 
-        if ( name == null || name.isEmpty() ) errors.put("name", "The name can\' be empty!");
-        if ( lastName == null || lastName.isEmpty() ) errors.put("lastName", "The last name can\' be empty!");
-        if ( idNumber == null || idNumber.isEmpty() ) errors.put("idNumber", "The id number name can\' be empty!");
-        else if ( !client.getIdNumber().equals(idNumber) && userService.existsByIdNumber(idNumber) ) errors.put("idNumber", "This id number is already taken!");
-        if ( email == null || email.isEmpty() ) errors.put("email", "The email can\' be empty!");
-        else if ( !emailPattern.matcher(email).matches() ) errors.put("email", "You must enter a valid email address!");
-        else if ( !client.getEmail().equals(email) && userService.existsByEmail(email) ) errors.put("email", "This email address is already taken!");
-        if ( phone == null || phone.isEmpty() ) errors.put("phone", "The phone can\' be empty!");
-        else if ( !phonePattern.matcher(phone).matches() ) errors.put("phone", "You must enter a valid phone number!");
-        if ( address == null || address.isEmpty() ) errors.put("address", "The address can\' be empty!");
+        if ( name == null || name.isEmpty() ) errors.put("name", messageSource.getMessage("form.error.name.empty", null, locale));
+        if ( lastName == null || lastName.isEmpty() ) errors.put("lastName", messageSource.getMessage("form.error.lastName.empty", null, locale));
+        if ( idNumber == null || idNumber.isEmpty() ) errors.put("idNumber", messageSource.getMessage("form.error.idNumber.empty", null, locale));
+        else if ( !client.getIdNumber().equals(idNumber) && userService.existsByIdNumber(idNumber) ) errors.put("idNumber", messageSource.getMessage("form.error.idNumber.taken", null, locale));
+        if ( email == null || email.isEmpty() ) errors.put("email", messageSource.getMessage("form.error.email.empty", null, locale));
+        else if ( !emailPattern.matcher(email).matches() ) errors.put("email", messageSource.getMessage("form.error.email.invalid", null, locale));
+        else if ( !client.getEmail().equals(email) && userService.existsByEmail(email) ) errors.put("email", messageSource.getMessage("form.error.email.taken", null, locale));
+        if ( phone == null || phone.isEmpty() ) errors.put("phone", messageSource.getMessage("form.error.phone.empty", null, locale));
+        else if ( !phonePattern.matcher(phone).matches() ) errors.put("phone", messageSource.getMessage("form.error.phone.invalid", null, locale));
+        if ( address == null || address.isEmpty() ) errors.put("address", messageSource.getMessage("form.error.address.empty", null, locale));
 
         if ( !errors.isEmpty() ) {
 

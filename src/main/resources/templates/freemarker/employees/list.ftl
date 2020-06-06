@@ -1,17 +1,17 @@
 <#include "../base.ftl"/>
 
-<#macro title>Employees</#macro>
+<#macro title><@spring.message "employee.plural.up" /></#macro>
 
 <#macro styles></#macro>
 
 <#macro body>
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Employees</h1>
+    <h1 class="h3 mb-0 text-gray-800"><@spring.message "employee.plural.up" /></h1>
     <a href="/employees/register" class="btn btn-primary btn-icon-split">
         <span class="icon text-white-50">
             <i class="fas fa-plus"></i>
         </span>
-        <span class="text">Add employee</span>
+        <span class="text"><@spring.message "action.Add" /> <@spring.message "employee.singular.dn" /></span>
     </a>
 </div>
 <div class="card shadow mb-4">
@@ -20,10 +20,10 @@
             <table class="table table-bordered" width="100%" cellspacing="0">
                 <thead>
                     <tr role="row">
-                        <th class="w-25">Id Number</th>
-                        <th class="w-50">Name</th>
-                        <th>Role</th>
-                        <th>Actions</th>
+                        <th class="w-25"><@spring.message "user.attr.idNumber.up" /></th>
+                        <th class="w-50"><@spring.message "user.attr.fullName.up" /></th>
+                        <th><@spring.message "user.attr.role.up" /></th>
+                        <th><@spring.message "action.plural.up" /></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -37,13 +37,13 @@
                                 <span class="icon text-white-50">
                                 <i class="fas fa-eye"></i>
                                 </span>
-                                <span class="text">View</span>
+                                <span class="text"><@spring.message "action.View" /></span>
                             </a>
                             <a href="/employees/edit/${employee.idNumber}" class="btn btn-warning btn-icon-split">
                                 <span class="icon text-white-50">
                                 <i class="fas fa-edit"></i>
                                 </span>
-                                <span class="text">Edit</span>
+                                <span class="text"><@spring.message "action.Edit" /></span>
                             </a>
                         </td>
                     </tr>
