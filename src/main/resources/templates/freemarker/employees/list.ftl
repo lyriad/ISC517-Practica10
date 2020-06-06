@@ -32,16 +32,16 @@
                         <td>${employee.idNumber}</td>
                         <td>${employee.getFullName()}</td>
                         <td>${employee.roles?first.role}</td>
-                        <td class="d-flex justify-content-between">
-                            <a href="/employees/${employee.idNumber}" class="btn btn-info btn-icon-split">
+                        <td class="d-flex">
+                            <a href="/employees/${employee.idNumber}" class="btn btn-info btn-icon-split mr-2">
                                 <span class="icon text-white-50">
-                                <i class="fas fa-eye"></i>
+                                    <i class="fas fa-eye"></i>
                                 </span>
                                 <span class="text"><@spring.message "action.View" /></span>
                             </a>
                             <a href="/employees/edit/${employee.idNumber}" class="btn btn-warning btn-icon-split">
                                 <span class="icon text-white-50">
-                                <i class="fas fa-edit"></i>
+                                    <i class="fas fa-edit"></i>
                                 </span>
                                 <span class="text"><@spring.message "action.Edit" /></span>
                             </a>

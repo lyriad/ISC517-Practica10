@@ -34,16 +34,16 @@
                         <td>${client.getFullName()}</td>
                         <td>${client.email}</td>
                         <td>${client.phone}</td>
-                        <td class="d-flex justify-content-between">
-                            <a href="/clients/${client.idNumber}" class="btn btn-info btn-icon-split">
+                        <td class="d-flex">
+                            <a href="/clients/${client.idNumber}" class="btn btn-info btn-icon-split mr-2">
                                 <span class="icon text-white-50">
-                                <i class="fas fa-eye"></i>
+                                    <i class="fas fa-eye"></i>
                                 </span>
                                 <span class="text"><@spring.message "action.View" /></span>
                             </a>
                             <a href="/clients/edit/${client.idNumber}" class="btn btn-warning btn-icon-split">
                                 <span class="icon text-white-50">
-                                <i class="fas fa-edit"></i>
+                                    <i class="fas fa-edit"></i>
                                 </span>
                                 <span class="text"><@spring.message "action.Edit" /></span>
                             </a>
