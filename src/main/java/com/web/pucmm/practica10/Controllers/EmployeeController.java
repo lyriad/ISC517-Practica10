@@ -51,7 +51,6 @@ public class EmployeeController {
     @GetMapping("/register")
     public String getRegister( Model model, @ModelAttribute("employee") User employee, @ModelAttribute("errors") HashMap<String, String> errors) {
 
-        if ( employee.hasRole("CLIENT") ) return "redirect:/error";
         if (errors == null) model.addAttribute("errors", new HashMap<>());
         model.addAttribute("action", "Add");
 
@@ -69,17 +68,17 @@ public class EmployeeController {
         Map<String, String> errors = new HashMap<String, String>();
 
         if ( userRole == null ) errors.put("role", "The selected role is invalid!");
-        if ( name == null || name.isEmpty() ) errors.put("name", "The name can\' be empty!");
-        if ( lastName == null || lastName.isEmpty() ) errors.put("lastName", "The last name can\' be empty!");
-        if ( idNumber == null || idNumber.isEmpty() ) errors.put("idNumber", "The id number name can\' be empty!");
+        if ( name == null || name.isEmpty() ) errors.put("name", "The name can\'t be empty!");
+        if ( lastName == null || lastName.isEmpty() ) errors.put("lastName", "The last name can\'t be empty!");
+        if ( idNumber == null || idNumber.isEmpty() ) errors.put("idNumber", "The id number name can\'t be empty!");
         else if ( userService.existsByIdNumber(idNumber) ) errors.put("idNumber", "This id number is already taken!");
-        if ( email == null || email.isEmpty() ) errors.put("email", "The email can\' be empty!");
+        if ( email == null || email.isEmpty() ) errors.put("email", "The email can\'t be empty!");
         else if ( !emailPattern.matcher(email).matches() ) errors.put("email", "You must enter a valid email address!");
         else if ( userService.existsByEmail(email) ) errors.put("email", "This email address is already taken!");
-        if ( phone == null || phone.isEmpty() ) errors.put("phone", "The phone can\' be empty!");
+        if ( phone == null || phone.isEmpty() ) errors.put("phone", "The phone can\'t be empty!");
         else if ( !phonePattern.matcher(phone).matches() ) errors.put("phone", "You must enter a valid phone number!");
-        if ( address == null || address.isEmpty() ) errors.put("address", "The address can\' be empty!");
-        if ( password == null || password.isEmpty() ) errors.put("password", "The password can\' be empty!");
+        if ( address == null || address.isEmpty() ) errors.put("address", "The address can\'t be empty!");
+        if ( password == null || password.isEmpty() ) errors.put("password", "The password can\'t be empty!");
         else if ( confirmPassword == null || confirmPassword.isEmpty() ) errors.put("confirmPassword", "You must confirm the password!");
         else if ( !password.equals(confirmPassword) ) errors.put("confirmPassword", "The passwords do not match!");
 
@@ -131,16 +130,16 @@ public class EmployeeController {
         Map<String, String> errors = new HashMap<String, String>();
 
         if ( userRole == null ) errors.put("role", "The selected role is invalid!");
-        if ( name == null || name.isEmpty() ) errors.put("name", "The name can\' be empty!");
-        if ( lastName == null || lastName.isEmpty() ) errors.put("lastName", "The last name can\' be empty!");
-        if ( idNumber == null || idNumber.isEmpty() ) errors.put("idNumber", "The id number name can\' be empty!");
+        if ( name == null || name.isEmpty() ) errors.put("name", "The name can\'t be empty!");
+        if ( lastName == null || lastName.isEmpty() ) errors.put("lastName", "The last name can\'t be empty!");
+        if ( idNumber == null || idNumber.isEmpty() ) errors.put("idNumber", "The id number name can\'t be empty!");
         else if ( !employee.getIdNumber().equals(idNumber) && userService.existsByIdNumber(idNumber) ) errors.put("idNumber", "This id number is already taken!");
-        if ( email == null || email.isEmpty() ) errors.put("email", "The email can\' be empty!");
+        if ( email == null || email.isEmpty() ) errors.put("email", "The email can\'t be empty!");
         else if ( !emailPattern.matcher(email).matches() ) errors.put("email", "You must enter a valid email address!");
         else if ( !employee.getEmail().equals(email) && userService.existsByEmail(email) ) errors.put("email", "This email address is already taken!");
-        if ( phone == null || phone.isEmpty() ) errors.put("phone", "The phone can\' be empty!");
+        if ( phone == null || phone.isEmpty() ) errors.put("phone", "The phone can\'t be empty!");
         else if ( !phonePattern.matcher(phone).matches() ) errors.put("phone", "You must enter a valid phone number!");
-        if ( address == null || address.isEmpty() ) errors.put("address", "The address can\' be empty!");
+        if ( address == null || address.isEmpty() ) errors.put("address", "The address can\'t be empty!");
 
         if (password != null && !password.isEmpty() && confirmPassword != null || !confirmPassword.isEmpty() && !password.equals(confirmPassword)) {
             errors.put("confirmPassword", "The passwords do not match!");

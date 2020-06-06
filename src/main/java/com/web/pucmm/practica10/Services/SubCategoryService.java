@@ -15,7 +15,7 @@ public class SubCategoryService {
     private SubCategoryRepository repository;
 
     public List<SubCategory> all() {
-        return repository.findAll();       
+        return repository.findAll();      
     }
 
     public SubCategory findById(long id) {
