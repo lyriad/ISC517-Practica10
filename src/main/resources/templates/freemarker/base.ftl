@@ -24,11 +24,6 @@
                 </li>
                 <hr class="sidebar-divider"/>
                 <li class="nav-item">
-                    <a class="nav-link" href="/categories">
-                    <i class="fas fa-fw fa-th-list"></i>
-                    <span>Categories</span></a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link" href="#">
                     <i class="fas fa-fw fa-tools"></i>
                     <span><@spring.message "equipments.plural.up" /></span></a>
@@ -49,10 +44,19 @@
                     <span><@spring.message "client.plural.up" /></span></a>
                 </li>
                 <#if Session.user.hasRole('ADMIN')>
+                <hr class="sidebar-divider">
+                <div class="sidebar-heading">
+                    <@spring.message "role.admin" />
+                </div>
                 <li class="nav-item">
                     <a class="nav-link" href="/employees">
                     <i class="fas fa-fw fa-user-tie"></i>
                     <span><@spring.message "employee.plural.up" /></span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/categories">
+                    <i class="fas fa-fw fa-th-list"></i>
+                    <span><@spring.message "category.plural.up" /></span></a>
                 </li>
                 </#if>
                 <hr class="sidebar-divider"/>
