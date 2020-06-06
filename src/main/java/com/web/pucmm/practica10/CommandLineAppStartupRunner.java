@@ -68,7 +68,7 @@ public class CommandLineAppStartupRunner implements CommandLineRunner {
 
         if (edilio == null) {
             userRepository.save(new User(
-                "11111111111",
+                "03105780344",
                 "Edilio",
                 "ediliofco19@hotmail.com",
                 "Garcia",

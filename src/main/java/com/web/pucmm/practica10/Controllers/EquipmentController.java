@@ -3,6 +3,7 @@ package com.web.pucmm.practica10.Controllers;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import com.web.pucmm.practica10.Models.Equipment;
 import com.web.pucmm.practica10.Models.Category;
@@ -50,7 +51,9 @@ public class EquipmentController {
     public String getRegister( Model model, @ModelAttribute("equipment") Equipment equipment, @ModelAttribute("errors") HashMap<String, String> errors) {
 
         if (errors == null) model.addAttribute("errors", new HashMap<>());
+        List<Category> categories = categoryService.all();
         model.addAttribute("action", "Add");
+        model.addAttribute("categories", categories);
 
         return "/freemarker/equipments/register";
     }

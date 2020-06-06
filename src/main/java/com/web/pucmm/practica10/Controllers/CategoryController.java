@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -195,6 +196,17 @@ public class CategoryController {
             subCategoryService.update(subCategory);
             return String.format("redirect:/categories/%d/subcategories", id_category);
         }
+    }
+
+
+    @PostMapping("/{id_category}/mysubcategories")
+    public List<SubCategory> getSubcategories(Model model, @PathVariable long id_category) {
+
+        Category category = categoryService.findById(id_category);
+
+        System.out.println(category);
+
+        return categoryService.getSubCategories(category);
     }
 
 }

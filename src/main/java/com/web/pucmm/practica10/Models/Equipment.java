@@ -82,11 +82,11 @@ public class Equipment {
         this.costPerDay = costPerDay;
     }
 
-    public byte[] getImage() {
+    public String getImage() {
         return this.image;
     }
 
-    public void setImage(byte[] image) {
+    public void setImage(String image) {
         this.image = image;
     }
 }
