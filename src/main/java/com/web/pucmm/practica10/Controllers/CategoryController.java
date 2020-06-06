@@ -119,7 +119,7 @@ public class CategoryController {
         if ( category == null) return "redirect:/error";
 
         model.addAttribute("category", category);
-        model.addAttribute("SubCategories", categoryService.getSubCategories(category));
+        model.addAttribute("SubCategories", categoryService.getSubCategories(category.getId()));
         model.addAttribute("action", "Add");
 
         return "/freemarker/categories/subcategories";
@@ -168,7 +168,7 @@ public class CategoryController {
 
         model.addAttribute("subcategory", subCategory);
         model.addAttribute("category", category);
-        model.addAttribute("SubCategories", categoryService.getSubCategories(category));
+        model.addAttribute("SubCategories", categoryService.getSubCategories(category.getId()));
         model.addAttribute("action", "Edit");
 
         return "/freemarker/categories/subcategories";
@@ -197,16 +197,4 @@ public class CategoryController {
             return String.format("redirect:/categories/%d/subcategories", id_category);
         }
     }
-
-
-    @PostMapping("/{id_category}/mysubcategories")
-    public List<SubCategory> getSubcategories(Model model, @PathVariable long id_category) {
-
-        Category category = categoryService.findById(id_category);
-
-        System.out.println(category);
-
-        return categoryService.getSubCategories(category);
-    }
-
 }

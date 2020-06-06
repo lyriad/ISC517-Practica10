@@ -38,10 +38,8 @@
                     <div class="form-group row">
                         <div class="col-sm-6 mb-3 mb-sm-0">
                             <label class="text-dark">Category</label>
-                            <select name="categoryId" id="categoryId" class="form-control form-control-user <#if (errors.idNumber)??>is-invalid</#if>" required>
-                                <#if action == 'Add' >
-                                    <option value="" selected>Choose a Category</option>
-                                </#if>
+                            <select name="id_category" id="category-select" class="form-control form-control-user <#if (errors.idNumber)??>is-invalid</#if>" required>
+                                <#if action == 'Add' ><option>Choose a Category</option></#if>
                                 <#list categories as category>
                                     <#if action == 'Edit' > 
                                         <option value="${category.id}" <#if equipment.category.id == category.id > selected </#if> > ${category.name} </option>
@@ -54,15 +52,8 @@
                         </div>
                         <div class="col-sm-6 mb-3 mb-sm-0">
                             <label class="text-dark">Subcategory</label>
-                            <select name="categoryId" id="categoryId" class="form-control form-control-user <#if (errors.idNumber)??>is-invalid</#if>" required>
-                                <#if action == 'Add' >
-                                    <option value="" selected>Choose a Subcategory</option>
-                                </#if>
-                                <#if action == 'Edit' >
-                                    <#list subcategories as subcategory>
-                                        <option value="${subcategory.id}" <#if equipment.subcategory.id == subcategory.id > selected </#if> > ${subcategory.name} </option>
-                                    </#list>
-                                </#if>
+                            <select name="id_subcategory" id="subcategory-select" class="form-control form-control-user <#if (errors.idNumber)??>is-invalid</#if>" required>
+                                <option value="" selected>Choose a Subcategory</option>
                             </select>
                             <#if (errors.subcategory)??><div class="invalid-feedback">${errors.subcategory}</div></#if>
                         </div>
@@ -93,19 +84,24 @@
 
 <script>
 
-	document.getElementById("categoryId").addEventListener("change", function () {
-		let e = document.getElementById("categoryId");
-        let id = e.options[e.selectedIndex].value;
+	$(document).ready(function(){   
+        $("#category-select").change(function() {
+            const id_category = $("#category-select :selected").val();
+            $.ajax({
+                url: "/api/categories/"+id_category+"/subcategories",
+                method:'GET', 
+                    success: function (data) {
+                    console.log(data);
+                    $('#subcategory-select option').not(':first').remove();
+                    let html = '';
+                    for(var i = 0; i < data.length; i++)
+                        html += '<option value="'+data[i].id+'">'+data[i].name+'</option>';
 
-        fetch(
-        "/categories/" + id + "/mysubcategories",
-        {
-            method: 'POST',
-        }
-        ).then((response) => {
-            console.log(response);
-        })
-	});
+                    $('#subcategory-select option').first().after(html);
+                }
+            });
+        });
+    });
 
 </script>
 
