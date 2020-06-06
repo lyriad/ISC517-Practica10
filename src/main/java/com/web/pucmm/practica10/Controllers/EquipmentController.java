@@ -112,4 +112,16 @@ public class EquipmentController {
 
         return "/freemarker/equipments/register";
     }
+
+    @GetMapping("/{id}")
+    public String getView( Model model, @PathVariable long id ) {
+
+        Equipment equipment = equipmentService.findById(id);
+        if ( equipment == null) return "redirect:/error";
+
+        model.addAttribute("equipment", equipment);
+
+        return "/freemarker/equipments/view";
+    }
+
 }

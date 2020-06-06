@@ -35,7 +35,7 @@
                         <td>${equipment.cantAvailable}</td>
                         <td>${equipment.costPerDay}</td>
                         <td class="d-flex">
-                            <a href="#" class="btn btn-info btn-icon-split">
+                            <a href="/equipments/${equipment.id}" class="btn btn-info btn-icon-split">
                                 <span class="icon text-white-50">
                                 <i class="fas fa-eye"></i>
                                 </span>
