@@ -60,10 +60,10 @@
                         </div>
                         <div class="col-sm-6">
                             <label class="text-dark"><@spring.message "user.attr.role.up" /></label>
-                            <select name="role" class="form-control form-control-user <#if (errors.role)??>is-invalid</#if>">
+                            <select name="role" class="form-control form-control-user <#if (errors.role)??>is-invalid</#if>" value="<#if (employee.roles?first.role)??>${employee.roles?first.role}</#if>">
                                 <option <#if !((user.roles?first.role)??)>selected</#if>><@spring.message "role.form.select" /></option>
-                                <option value="ADMIN" <#if (employee.roles?first.role)?? && user.roles?first.role == "ADMIN">selected</#if>><@spring.message "role.admin" /></option>
-                                <option value="EMPLOYEE" <#if (employee.roles?first.role)?? && user.roles?first.role == "EMPLOYEE">selected</#if>><@spring.message "employee.singular.up" /></option>
+                                <option value="ADMIN" <#if (employee.roles?first.role)?? && (employee.roles?first.role == "ADMIN")>selected</#if>><@spring.message "role.admin" /></option>
+                                <option value="EMPLOYEE" <#if (employee.roles?first.role)?? && (employee.roles?first.role == "EMPLOYEE")>selected</#if>><@spring.message "employee.singular.up" /></option>
                             </select>
                             <#if (errors.role)??><div class="invalid-feedback">${errors.role}</div></#if>
                         </div>

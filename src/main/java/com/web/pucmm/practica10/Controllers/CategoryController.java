@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -44,7 +45,7 @@ public class CategoryController {
     }
 
     @PostMapping("/register")
-    public String postRegister(RedirectAttributes attrs, Locale locale,@RequestParam(name = "name") String name, @RequestParam(name = "description") String description) {
+    public String postRegister(RedirectAttributes attrs, Locale locale, @RequestParam(name = "name") String name, @RequestParam(name = "description") String description) {
 
         Category category = new Category(name, description);
 
@@ -76,7 +77,6 @@ public class CategoryController {
         }
         
         if ( category == null) return "redirect:/error";
-        System.out.println(category.toJson());
         
         if (errors == null) model.addAttribute("errors", new HashMap<>());
 
@@ -196,5 +196,4 @@ public class CategoryController {
             return String.format("redirect:/categories/%d", id_category);
         }
     }
-
 }

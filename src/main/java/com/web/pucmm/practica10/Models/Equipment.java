@@ -2,6 +2,8 @@ package com.web.pucmm.practica10.Models;
 
 import javax.persistence.*;
 
+import org.json.simple.JSONObject;
+
 @Entity
 @Table(name = "equipments")
 public class Equipment {
@@ -26,15 +28,14 @@ public class Equipment {
     @Column(nullable = false)
     private float costPerDay;
 
-    @Lob
-    @Basic(fetch = FetchType.LAZY)
-    private byte[] image;
+    @Column
+    private String image;
 
     public Equipment () {
 
     }
 
-    public Equipment( String name, SubCategory subCategory, Category category, int cantAvailable, float costPerDay, byte[] image ) {
+    public Equipment( String name, SubCategory subCategory, Category category, int cantAvailable, float costPerDay, String image ) {
         this.name = name;
         this.subCategory = subCategory;
         this.category = category;
@@ -67,6 +68,14 @@ public class Equipment {
         this.subCategory = subCategory;
     }
 
+    public Category getCategory() {
+        return this.category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
     public int getCantAvailable() {
         return this.cantAvailable;
     }
@@ -83,11 +92,27 @@ public class Equipment {
         this.costPerDay = costPerDay;
     }
 
-    public byte[] getImage() {
+    public String getImage() {
         return this.image;
     }
 
-    public void setImage(byte[] image) {
+    public void setImage(String image) {
         this.image = image;
     }
+
+    public String toJson() {
+
+        JSONObject json = new JSONObject();
+
+        json.put("id", this.id);
+        json.put("name", this.name);
+        json.put("category", this.category);
+        json.put("subCategory", this.subCategory);
+        json.put("cantAvailable", this.cantAvailable);
+        json.put("costPerDay", this.costPerDay);
+        json.put("image", this.image);
+
+        return json.toJSONString();
+    }
+
 }
