@@ -60,10 +60,10 @@
                         </div>
                         <div class="col-sm-6">
                             <label class="text-dark">Role</label>
-                            <select name="role" class="form-control form-control-user <#if (errors.role)??>is-invalid</#if>">
+                            <select name="role" class="form-control form-control-user <#if (errors.role)??>is-invalid</#if>" value="<#if (employee.roles?first.role)??>${employee.roles?first.role}</#if>">
                                 <option <#if !((user.roles?first.role)??)>selected</#if>>&lt;Select Role&gt;</option>
-                                <option value="ADMIN" <#if (employee.roles?first.role)?? && user.roles?first.role == "ADMIN">selected</#if>>Admin</option>
-                                <option value="EMPLOYEE" <#if (employee.roles?first.role)?? && user.roles?first.role == "EMPLOYEE">selected</#if>>Employee</option>
+                                <option value="ADMIN" <#if (employee.roles?first.role)?? && (employee.roles?first.role == "ADMIN")>selected</#if>>Admin</option>
+                                <option value="EMPLOYEE" <#if (employee.roles?first.role)?? && (employee.roles?first.role == "EMPLOYEE")>selected</#if>>Employee</option>
                             </select>
                             <#if (errors.role)??><div class="invalid-feedback">${errors.role}</div></#if>
                         </div>

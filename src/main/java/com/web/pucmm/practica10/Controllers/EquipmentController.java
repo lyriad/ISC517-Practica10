@@ -1,8 +1,6 @@
 package com.web.pucmm.practica10.Controllers;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import com.web.pucmm.practica10.Models.Equipment;
@@ -52,30 +50,33 @@ public class EquipmentController {
     public String getRegister( Model model, @ModelAttribute("equipment") Equipment equipment, @ModelAttribute("errors") HashMap<String, String> errors) {
 
         if (errors == null) model.addAttribute("errors", new HashMap<>());
-        List<Category> categories = categoryService.all();
         model.addAttribute("action", "Add");
-        model.addAttribute("categories", categories);
+        model.addAttribute("categories", categoryService.all());
 
         return "/freemarker/equipments/register";
     }
 
     @PostMapping("/register")
-    public String postRegister(RedirectAttributes attrs, @RequestParam(name = "image") MultipartFile[] files, @RequestParam(name = "name") String name, @RequestParam(name = "id_category") String categoryId, @RequestParam(name = "id_subcategory") String subCategoryId, @RequestParam(name = "cantAvailable") int cantAvailable, @RequestParam(name = "costPerDay") float costPerDay) {
+    public String postRegister(RedirectAttributes attrs, @RequestParam(name = "image") MultipartFile[] files, @RequestParam(name = "name") String name, @RequestParam(name = "id_category") String id_category, @RequestParam(name = "id_subcategory") String id_subcategory, @RequestParam(name = "cantAvailable") int cantAvailable, @RequestParam(name = "costPerDay") float costPerDay) {
 
         String imagePath = uploadService.uploadFile(files[0], "avatars");
 
-        Category category = categoryService.findById(Long.parseLong(categoryId));
-        SubCategory subCategory = subCategoryService.findById(Long.parseLong(subCategoryId));
+        Map<String, String> errors = new HashMap<String, String>();
+
+        Category category = null;
+        if(id_category != null && !id_category.isEmpty())
+            category = categoryService.findById(Long.parseLong(id_category));
+        if (category == null) errors.put("category", "You must select a valid category!");
+
+        SubCategory subCategory = null;
+        if(id_subcategory != null && !id_subcategory.isEmpty())
+            subCategory = subCategoryService.findById(Long.parseLong(id_subcategory));
 
         Equipment equipment = new Equipment(name, subCategory, category, cantAvailable, costPerDay, imagePath);
 
-        Map<String, String> errors = new HashMap<String, String>();
-
         if ( name == null || name.isEmpty() ) errors.put("name", "The name can\' be empty!");
-        if ( categoryId == null || categoryId.isEmpty() ) errors.put("id_category", "Must choose a Category!");
-        if ( subCategoryId == null || subCategoryId.isEmpty() ) errors.put("id_subcategory", "Must choose a Subcategory!");
         if ( cantAvailable < 0 ) errors.put("cantAvailable", "This must be positive!");
-        if ( costPerDay < 0 ) errors.put("subCategoryId", "This must be positive!");
+        if ( costPerDay < 0 ) errors.put("costPerDay", "This must be positive!");
 
         if ( errors.isEmpty() ) {
 
@@ -90,14 +91,14 @@ public class EquipmentController {
         }
     }
 
-    @GetMapping("/edit/{id}")
-    public String getEdit( Model model, @PathVariable long id, @ModelAttribute("employee") Equipment equipment, @ModelAttribute("errors") HashMap<String, String> errors ) {
+    @GetMapping("/edit/{id_equipment}")
+    public String getEdit( Model model, @PathVariable long id_equipment, @ModelAttribute("employee") Equipment equipment, @ModelAttribute("errors") HashMap<String, String> errors ) {
 
         try {
-            equipment.toJson();
+            equipment.getName().isEmpty();
 
         } catch ( Exception e ) {
-            equipment = equipmentService.findById(id);
+            equipment = equipmentService.findById(id_equipment);
         }
 
         if ( equipment == null) return "redirect:/error";
@@ -108,8 +109,61 @@ public class EquipmentController {
         model.addAttribute("categories", categories);
         model.addAttribute("equipment", equipment);
         model.addAttribute("action", "Edit");
-        model.addAttribute("id", id);
 
         return "/freemarker/equipments/register";
+    }
+
+    @PostMapping("/edit/{id_equipment}")
+    public String postEdit(RedirectAttributes attrs, @PathVariable long id_equipment, @RequestParam(name = "image") MultipartFile[] files, @RequestParam(name = "name") String name, @RequestParam(name = "id_category") String id_category, @RequestParam(name = "id_subcategory") String id_subcategory, @RequestParam(name = "cantAvailable") int cantAvailable, @RequestParam(name = "costPerDay") float costPerDay) {
+
+        Equipment equipment = equipmentService.findById(id_equipment);
+        if ( equipment == null) return "redirect:/error";
+
+        String imagePath = uploadService.uploadFile(files[0], "avatars");
+
+        Map<String, String> errors = new HashMap<String, String>();
+
+        Category category = null;
+        if(id_category != null && !id_category.isEmpty())
+            category = categoryService.findById(Long.parseLong(id_category));
+        if (category == null) errors.put("category", "You must select a valid category!");
+
+        SubCategory subCategory = null;
+        if(id_subcategory != null && !id_subcategory.isEmpty())
+            subCategory = subCategoryService.findById(Long.parseLong(id_subcategory));
+    
+        if ( name == null || name.isEmpty() ) errors.put("name", "The name can\' be empty!");
+        if ( cantAvailable < 0 ) errors.put("cantAvailable", "This must be positive!");
+        if ( costPerDay < 0 ) errors.put("costPerDay", "This must be positive!");
+
+        if ( !errors.isEmpty() ) {
+
+            attrs.addFlashAttribute("equipment", equipment);
+            attrs.addFlashAttribute("errors", errors);
+            return String.format("redirect:/equipments/edit/%l", id_equipment);
+
+        } else {
+            equipment.setName(name);
+            if (Long.parseLong(id_category) != equipment.getCategory().getId()) equipment.setCategory(category);
+            if (id_subcategory!= null && !id_subcategory.isEmpty() && (Long.parseLong(id_subcategory) != equipment.getSubCategory().getId()))
+                equipment.setSubCategory(subCategory);
+            equipment.setCantAvailable(cantAvailable);
+            equipment.setCostPerDay(costPerDay);
+            if (imagePath != null) equipment.setImage(imagePath);
+
+            equipmentService.update(equipment);
+            return String.format("redirect:/equipments");
+        }
+    }
+
+    @GetMapping("/{id_equipment}")
+    public String getView( Model model, @PathVariable long id_equipment ) {
+
+        Equipment equipment = equipmentService.findById(id_equipment);
+        if ( equipment == null) return "redirect:/error";
+
+        model.addAttribute("equipment", equipment);
+
+        return "/freemarker/equipments/view";
     }
 }

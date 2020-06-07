@@ -8,7 +8,7 @@
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">${action} equipment</h1>
 </div>
-<form method="POST" action=<#if action == "Add">"/equipments/register"<#else>"/equipments/edit/${id}"</#if> enctype="multipart/form-data">
+<form method="POST" action=<#if action == "Add">"/equipments/register"<#else>"/equipments/edit/${equipment.id}"</#if> enctype="multipart/form-data">
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">Equipment information</h6>
@@ -38,31 +38,32 @@
                     <div class="form-group row">
                         <div class="col-sm-6 mb-3 mb-sm-0">
                             <label class="text-dark">Category</label>
-                            <select name="id_category" id="category-select" class="form-control form-control-user <#if (errors.id_category)??>is-invalid</#if>" required>
-                                <#if action == 'Add' ><option>Choose a Category</option></#if>
+                            <select name="id_category" id="category-select" class="form-control form-control-user <#if (errors.category)??>is-invalid</#if>" value="<#if (equipment.category.id)??>${equipment.category.id}</#if>">
+                                <#if action == 'Add' ><option value="">Choose a Category</option></#if>
                                 <#list categories as category>
-                                    <option value="${category.id}"> ${category.name} </option>
+                                    <option value="${category.id}" <#if (equipment.category.id)?? && (equipment.category.id == category.id)>selected</#if>>${category.name}</option>
                                 </#list>
                             </select>
-                            <#if (errors.id_category)??><div class="invalid-feedback">${errors.id_category}</div></#if>
+                            <#if (errors.category)??><div class="invalid-feedback">${errors.category}</div></#if>
                         </div>
                         <div class="col-sm-6 mb-3 mb-sm-0">
                             <label class="text-dark">Subcategory</label>
-                            <select name="id_subcategory" id="subcategory-select" class="form-control form-control-user <#if (errors.idNumber)??>is-invalid</#if>" required>
-                                <option value="" selected>Choose a Subcategory</option>
+                            <select name="id_subcategory" id="subcategory-select" class="form-control form-control-user <#if (errors.subcategory)??>is-invalid</#if>" value="<#if (equipment.subCategory.id)??>${equipment.subCategory.id}</#if>">
+                                <option value="">Choose a Subcategory</option>
                             </select>
-                            <#if (errors.id_subcategory)??><div class="invalid-feedback">${errors.id_subcategory}</div></#if>
+                            <small class="form-text text-muted"><#if action == 'Edit'>Only if you want to change the subcategory<#else>Optional</#if></small>
+                            <#if (errors.subcategory)??><div class="invalid-feedback">${errors.subcategory}</div></#if>
                         </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-sm-6 mb-3 mb-sm-0">
                             <label class="text-dark">Quantity Available</label>
-                            <input name="cantAvailable" type="number" class="form-control form-control-user <#if (errors.cantAvailable)??>is-invalid</#if>" value="<#if (equipment.cantAvailable)??>${equipment.cantAvailable}</#if>" required>
+                            <input name="cantAvailable" type="number" class="form-control form-control-user <#if (errors.cantAvailable)??>is-invalid</#if>" value="<#if (equipment.cantAvailable)??>${equipment.cantAvailable}</#if>" min="0" required>
                             <#if (errors.cantAvailable)??><div class="invalid-feedback">${errors.cantAvailable}</div></#if>
                         </div>
                         <div class="col-sm-6">
                             <label class="text-dark">Cost Per Day</label>
-                            <input name="costPerDay" type="number" class="form-control form-control-user <#if (errors.costPerDay)??>is-invalid</#if>" value="<#if (equipment.costPerDay)??>${equipment.costPerDay}</#if>" required>
+                            <input name="costPerDay" type="number" class="form-control form-control-user <#if (errors.costPerDay)??>is-invalid</#if>" value="<#if (equipment.costPerDay)??>${equipment.costPerDay}</#if>" min="0" step="0.01" required>
                             <#if (errors.costPerDay)??><div class="invalid-feedback">${errors.costPerDay}</div></#if>
                         </div>
                     </div>
@@ -77,26 +78,27 @@
 </#macro>
 
 <#macro scripts>
-
 <script>
-
-	$(document).ready(function(){   
-        $("#category-select").change(function() {
+	$(document).ready(() => {   
+        const fetchSubCategories = () => {
             const id_category = $("#category-select :selected").val();
             $.ajax({
                 url: "/api/categories/"+id_category+"/subcategories",
                 method:'GET', 
                     success: function (data) {
-                    console.log(data);
                     $('#subcategory-select option').not(':first').remove();
                     let html = '';
                     for(var i = 0; i < data.length; i++)
-                        html += '<option value="'+data[i].id+'">'+data[i].name+'</option>';
+                        html += '<option value="' + data[i].id + '" ' +
+                            (data[i].id == <#if (equipment.subCategory.id)??>${equipment.subCategory.id}<#else>null</#if> ? 'selected>' : '>') +
+                            data[i].name+'</option>';
 
                     $('#subcategory-select option').first().after(html);
                 }
             });
-        });
+        };
+        fetchSubCategories()
+        $("#category-select").change(fetchSubCategories);
     });
 
 </script>

@@ -20,22 +20,24 @@
             <table class="table table-bordered" width="100%" cellspacing="0">
                 <thead>
                     <tr role="row">
-                        <th>Name</th>
+                        <th style="flex: 1; min-width: 1px">Name</th>
+                        <th>Category</th>
                         <th>Subcategory</th>
                         <th>Available</th>
                         <th>Cost per day</th>
-                        <th>Actions</th>
+                        <th style="width: 1px;">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     <#list equipments as equipment>
                     <tr>
                         <td>${equipment.name}</td>
-                        <td>${equipment.getSubCategory().getName()}</td>
+                        <td>${equipment.category.name}</td>
+                        <td><#if (equipment.subCategory.name)??>${equipment.subCategory.name}<#else>--</#if></td>
                         <td>${equipment.cantAvailable}</td>
                         <td>${equipment.costPerDay}</td>
                         <td class="d-flex">
-                            <a href="#" class="btn btn-info btn-icon-split">
+                            <a href="/equipments/${equipment.id}" class="btn btn-info btn-icon-split mr-2">
                                 <span class="icon text-white-50">
                                 <i class="fas fa-eye"></i>
                                 </span>
