@@ -27,4 +27,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT COUNT(1) FROM User u WHERE u.email = :email")
     int existsByEmail(@Param("email") String email);
+
+    @Query("SELECT COUNT(*) FROM Invoice i WHERE i.employee.id = :id_employee AND i.paid = TRUE")
+    int getCountPendingInvoices(@Param("id_employee") long id_employee);
+    
 }
