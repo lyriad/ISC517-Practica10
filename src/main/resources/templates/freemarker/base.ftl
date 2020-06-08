@@ -26,15 +26,15 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/equipments">
                     <i class="fas fa-fw fa-tools"></i>
-                    <span><@spring.message "equipments.plural.up" /></span></a>
+                    <span><@spring.message "equipment.plural.up" /></span></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">
                     <i class="fas fa-fw fa-truck"></i>
-                    <span><@spring.message "rentals.plural.up" /></span></a>
+                    <span><@spring.message "rental.plural.up" /></span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" href="/invoices">
                     <i class="fas fa-fw fa-file-invoice-dollar"></i>
                     <span><@spring.message "invoice.plural.up" /></span></a>
                 </li>
