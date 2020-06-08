@@ -54,8 +54,6 @@ public class ClientController {
     @GetMapping("/register")
     public String getRegister( Model model, @ModelAttribute("client") User client, @ModelAttribute("errors") HashMap<String, String> errors) {
 
-        if ( !client.hasRole("CLIENT") ) return "redirect:/error";
-
         if (errors == null) model.addAttribute("errors", new HashMap<>());
         model.addAttribute("action", "Add");
 

@@ -1,4 +1,4 @@
-package com.web.pucmm.practica10.Controllers.ApiControllers;
+package com.web.pucmm.practica10.Controllers.Api;
 
 import java.util.List;
 
