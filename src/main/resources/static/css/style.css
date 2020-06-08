@@ -1,3 +1,28 @@
+.avatar-xsmall {
+    width: 1.375rem;
+    height: 1.375rem;
+}
+  
+.avatar-small {
+    width: 2rem;
+    height: 2rem;
+}
+  
+.avatar-medium {
+    width: 3.125rem;
+    height: 3.125rem;
+}
+  
+.avatar-large {
+    width: 5.125rem;
+    height: 5.125rem;
+}
+  
+.avatar-xlarge {
+    width: 8rem;
+    height: 8rem;
+}
+
 .avatar-xxlarge {
     width: 10rem;
     height: 10rem;
