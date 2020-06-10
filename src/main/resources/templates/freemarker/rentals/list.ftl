@@ -26,7 +26,7 @@
                         <td>${rental.equipment.name}</td>
                         <td>${rental.category.name}</td>
                         <td>${rental.client.idNumber} ${rental.client.name}</td>
-                        <td>${rental.createdAt}</td>
+                        <td>${rental.getRentedDays}</td>
                     </tr>
                     </#list>
                 </tbody>
