@@ -99,5 +99,13 @@ public class Rental {
     public void setRealReturnDate(Date realReturnDate) {
         this.realReturnDate = realReturnDate;
     }
+
+    public int getRentedDays() {
+        Date now = new Date();
+        long diff = now.getTime() - this.createdAt.getTime();
+        int diffDays = (int) (diff / (24 * 60 * 60 * 1000));
+
+        return diffDays;
+    }
     
 }

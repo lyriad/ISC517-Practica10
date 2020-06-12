@@ -29,7 +29,7 @@
                     <span><@spring.message "equipment.plural.up" /></span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" href="/rentals">
                     <i class="fas fa-fw fa-truck"></i>
                     <span><@spring.message "rental.plural.up" /></span></a>
                 </li>
