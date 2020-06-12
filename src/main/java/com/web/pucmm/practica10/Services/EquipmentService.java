@@ -25,6 +25,10 @@ public class EquipmentService {
         return repository.findByName(name);
     }
 
+    public Equipment searchByName(String name) {
+        return repository.searchFirstByNameContaining(name);
+    }
+
     @Transactional
     public Equipment create(Equipment equipment) {
 

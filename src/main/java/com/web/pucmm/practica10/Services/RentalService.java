@@ -31,11 +31,11 @@ public class RentalService {
         return repository.getDelivered();
     }
 
-    List<Rental> getFromClient(User client) {
-        return repository.getFromClient(client.getId());
+    public List<Rental> getFromClient(long id_client) {
+        return repository.getFromClient(id_client);
     }
 
-    List<Rental> getByEquipment(Equipment equipment) {
+    public List<Rental> getByEquipment(Equipment equipment) {
         return repository.getByEquipment(equipment.getId());
     }
 

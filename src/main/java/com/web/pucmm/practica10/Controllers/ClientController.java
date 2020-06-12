@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 import com.web.pucmm.practica10.Models.Role;
 import com.web.pucmm.practica10.Models.User;
 import com.web.pucmm.practica10.Services.FileUploadService;
+import com.web.pucmm.practica10.Services.RentalService;
 import com.web.pucmm.practica10.Services.RoleService;
 import com.web.pucmm.practica10.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,9 @@ public class ClientController {
 
     @Autowired
     RoleService roleService;
+
+    @Autowired
+    RentalService rentalService;
 
     @Autowired
     private MessageSource messageSource;
@@ -169,6 +173,7 @@ public class ClientController {
         if ( !client.hasRole("CLIENT") ) return "redirect:/error";
 
         model.addAttribute("client", client);
+        model.addAttribute("rentals", rentalService.getFromClient(client.getId()));
 
         return "/freemarker/clients/view";
     }
