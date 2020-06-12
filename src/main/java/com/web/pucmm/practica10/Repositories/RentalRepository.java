@@ -12,7 +12,7 @@ public interface RentalRepository extends JpaRepository<Rental, Long> {
     @Query("SELECT r FROM Rental r WHERE r.realReturnDate = null")
     List<Rental> getPending();
     
-    @Query("SELECT r FROM Rental r WHERE r.realReturnDate = null ORDER BY createdAt DESC")
+    @Query("SELECT r FROM Rental r WHERE r.realReturnDate = null ORDER BY createdAt")
     List<Rental> getPendingOrdered();
 
     @Query("SELECT r FROM Rental r WHERE r.realReturnDate != null")
