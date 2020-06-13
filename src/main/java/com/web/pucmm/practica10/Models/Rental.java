@@ -108,4 +108,7 @@ public class Rental {
         return diffDays;
     }
     
+    public double getCost() {
+        return this.getRentedDays() * this.getEquipment().getCostPerDay() * this.getAmount();
+    }
 }
