@@ -1,5 +1,6 @@
 package com.web.pucmm.practica10.Controllers;
 
+import java.security.Principal;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -48,18 +49,22 @@ public class ClientController {
     private Pattern phonePattern = Pattern.compile("^(\\+\\d{1,3}( )?)?((\\(\\d{3}\\))|\\d{3})[- .]?\\d{3}[- .]?\\d{4}$");
     
     @GetMapping
-    public String list( Model model) {
+    public String list(Principal principal, Model model) {
 
+        User user = userService.getLoggedUser(principal);
         model.addAttribute("clients", userService.getAllClients());
+        model.addAttribute("auth", user);
 
         return "/freemarker/clients/list";
     }
 
     @GetMapping("/register")
-    public String getRegister( Model model, @ModelAttribute("client") User client, @ModelAttribute("errors") HashMap<String, String> errors) {
+    public String getRegister(Principal principal, Model model, @ModelAttribute("client") User client, @ModelAttribute("errors") HashMap<String, String> errors) {
 
+        User user = userService.getLoggedUser(principal);
         if (errors == null) model.addAttribute("errors", new HashMap<>());
         model.addAttribute("action", "Add");
+        model.addAttribute("auth", user);
 
         return "/freemarker/clients/register";
     }
@@ -99,8 +104,9 @@ public class ClientController {
     }
 
     @GetMapping("/edit/{id_number}")
-    public String getEdit( Model model, @PathVariable String id_number, @ModelAttribute("client") User client, @ModelAttribute("errors") HashMap<String, String> errors ) {
+    public String getEdit( Principal principal, Model model, @PathVariable String id_number, @ModelAttribute("client") User client, @ModelAttribute("errors") HashMap<String, String> errors ) {
 
+        User user = userService.getLoggedUser(principal);
         try {
             client.toJson();
 
@@ -116,6 +122,7 @@ public class ClientController {
         model.addAttribute("client", client);
         model.addAttribute("action", "Edit");
         model.addAttribute("id_number", id_number);
+        model.addAttribute("auth", user);
 
         return "/freemarker/clients/register";
     }
@@ -166,13 +173,15 @@ public class ClientController {
     }
 
     @GetMapping("/{id_number}")
-    public String getView( Model model, @PathVariable String id_number ) {
+    public String getView( Principal principal, Model model, @PathVariable String id_number ) {
 
+        User user = userService.getLoggedUser(principal);
         User client = userService.findByIdNumber(id_number);
         if ( client == null) return "redirect:/error";
         if ( !client.hasRole("CLIENT") ) return "redirect:/error";
 
         model.addAttribute("client", client);
+        model.addAttribute("auth", user);
         model.addAttribute("rentals", rentalService.getFromClient(client.getId()));
 
         return "/freemarker/clients/view";

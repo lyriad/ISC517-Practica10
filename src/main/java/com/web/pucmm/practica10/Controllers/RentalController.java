@@ -1,5 +1,6 @@
 package com.web.pucmm.practica10.Controllers;
 
+import java.security.Principal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -54,9 +55,11 @@ public class RentalController {
     }
 
     @GetMapping
-    public String list( Model model ) {
+    public String list( Principal principal, Model model ) {
 
+        User user = clientService.getLoggedUser(principal);
         model.addAttribute("rentals", rentalService.getPendingOrdered());
+        model.addAttribute("auth", user);
 
         return "/freemarker/rentals/list";
     }

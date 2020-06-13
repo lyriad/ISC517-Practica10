@@ -2,14 +2,19 @@ package com.web.pucmm.practica10.Controllers;
 
 import com.web.pucmm.practica10.Models.Category;
 import com.web.pucmm.practica10.Models.SubCategory;
+import com.web.pucmm.practica10.Models.User;
 import com.web.pucmm.practica10.Services.CategoryService;
 import com.web.pucmm.practica10.Services.SubCategoryService;
+import com.web.pucmm.practica10.Services.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -27,18 +32,26 @@ public class CategoryController {
     @Autowired
     private MessageSource messageSource;
 
+    @Autowired
+    UserService userService;
+
     @GetMapping
-    public String list( Model model) {
+    public String list( Principal principal, Model model) {
+
+        User user = userService.getLoggedUser(principal);
+        model.addAttribute("auth", user);
         model.addAttribute("categories", categoryService.all());
 
         return "/freemarker/categories/list";
     }
 
     @GetMapping("/register")
-    public String getRegister(Model model, @ModelAttribute("category") Category Category, @ModelAttribute("errors") HashMap<String, String> errors) {
+    public String getRegister(Principal principal, Model model, @ModelAttribute("category") Category Category, @ModelAttribute("errors") HashMap<String, String> errors) {
 
+        User user = userService.getLoggedUser(principal);
         if (errors == null) model.addAttribute("errors", new HashMap<>());
         model.addAttribute("action", "Add");
+        model.addAttribute("auth", user);
 
         return "/freemarker/categories/register";
     }
@@ -66,8 +79,9 @@ public class CategoryController {
     }
 
     @GetMapping("/edit/{id_category}")
-    public String getEdit( Model model, @PathVariable long id_category, @ModelAttribute("category") Category category, @ModelAttribute("errors") HashMap<String, String> errors ) {
+    public String getEdit(Principal principal, Model model, @PathVariable long id_category, @ModelAttribute("category") Category category, @ModelAttribute("errors") HashMap<String, String> errors ) {
 
+        User user = userService.getLoggedUser(principal);
         try {
             category.getName().isEmpty();
 
@@ -81,6 +95,7 @@ public class CategoryController {
 
         model.addAttribute("category", category);
         model.addAttribute("action", "Edit");
+        model.addAttribute("auth", user);
 
         return "/freemarker/categories/register";
     }
@@ -112,8 +127,9 @@ public class CategoryController {
     }
 
     @GetMapping("/{id_category}")
-    public String getSubcategory(Model model, @PathVariable long id_category, @ModelAttribute("subcategory") SubCategory subCategory, @ModelAttribute("errors") HashMap<String, String> errors) {
+    public String getSubcategory(Principal principal, Model model, @PathVariable long id_category, @ModelAttribute("subcategory") SubCategory subCategory, @ModelAttribute("errors") HashMap<String, String> errors) {
 
+        User user = userService.getLoggedUser(principal);
         if (errors == null) model.addAttribute("errors", new HashMap<>());
         Category category = categoryService.findById(id_category);
         
@@ -122,6 +138,7 @@ public class CategoryController {
         model.addAttribute("category", category);
         model.addAttribute("subcategories", categoryService.getSubCategories(category.getId()));
         model.addAttribute("action", "Add");
+        model.addAttribute("auth", user);
 
         return "/freemarker/categories/view";
     }
@@ -151,8 +168,9 @@ public class CategoryController {
     }
 
     @GetMapping("/{id_category}/subcategories/{id_subcategory}")
-    public String getEditSubcategory(RedirectAttributes attrs, Model model, @PathVariable long id_category, @PathVariable long id_subcategory, @ModelAttribute("subcategory") SubCategory subCategory, @ModelAttribute("errors") HashMap<String, String> errors ) {
+    public String getEditSubcategory(Principal principal,RedirectAttributes attrs, Model model, @PathVariable long id_category, @PathVariable long id_subcategory, @ModelAttribute("subcategory") SubCategory subCategory, @ModelAttribute("errors") HashMap<String, String> errors ) {
 
+        User user = userService.getLoggedUser(principal);
         try {
             subCategory.getName().isEmpty();
         } catch ( Exception e ) {
@@ -168,6 +186,7 @@ public class CategoryController {
         model.addAttribute("category", category);
         model.addAttribute("subcategories", categoryService.getSubCategories(category.getId()));
         model.addAttribute("action", "Edit");
+        model.addAttribute("auth", user);
 
         return "/freemarker/categories/view";
     }

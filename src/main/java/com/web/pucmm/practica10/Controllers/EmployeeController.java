@@ -1,5 +1,6 @@
 package com.web.pucmm.practica10.Controllers;
 
+import java.security.Principal;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -46,18 +47,23 @@ public class EmployeeController {
     private Pattern phonePattern = Pattern.compile("^(\\+\\d{1,3}( )?)?((\\(\\d{3}\\))|\\d{3})[- .]?\\d{3}[- .]?\\d{4}$");
     
     @GetMapping
-    public String list( Model model ) {
+    public String list( Model model, Principal principal ) {
 
+        User user = userService.getLoggedUser(principal);
         model.addAttribute("employees", userService.getAllEmployees());
+        model.addAttribute("auth", user);
 
         return "/freemarker/employees/list";
     }
 
     @GetMapping("/register")
-    public String getRegister( Model model, @ModelAttribute("employee") User employee, @ModelAttribute("errors") HashMap<String, String> errors) {
+    public String getRegister( Principal principal, Model model, @ModelAttribute("employee") User employee, @ModelAttribute("errors") HashMap<String, String> errors) {
 
+        User user = userService.getLoggedUser(principal);
+        
         if (errors == null) model.addAttribute("errors", new HashMap<>());
         model.addAttribute("action", "Add");
+        model.addAttribute("auth", user);
 
         return "/freemarker/employees/register";
     }
@@ -101,8 +107,10 @@ public class EmployeeController {
     }
 
     @GetMapping("/edit/{id_number}")
-    public String getEdit( Model model, @PathVariable String id_number, @ModelAttribute("employee") User employee, @ModelAttribute("errors") HashMap<String, String> errors ) {
+    public String getEdit( Principal principal, Model model, @PathVariable String id_number, @ModelAttribute("employee") User employee, @ModelAttribute("errors") HashMap<String, String> errors ) {
 
+        User user = userService.getLoggedUser(principal);
+        
         try {
             employee.toJson();
 
@@ -118,6 +126,7 @@ public class EmployeeController {
         model.addAttribute("employee", employee);
         model.addAttribute("action", "Edit");
         model.addAttribute("id_number", id_number);
+        model.addAttribute("auth", user);
 
         return "/freemarker/employees/register";
     }
@@ -174,13 +183,15 @@ public class EmployeeController {
     }
 
     @GetMapping("/{id_number}")
-    public String getView( Model model, @PathVariable String id_number ) {
+    public String getView( Principal principal, Model model, @PathVariable String id_number ) {
 
+        User user = userService.getLoggedUser(principal);
         User employee = userService.findByIdNumber(id_number);
         if ( employee == null) return "redirect:/error";
         if ( employee.hasRole("CLIENT") ) return "redirect:/error";
 
         model.addAttribute("employee", employee);
+        model.addAttribute("auth", user);
 
         return "/freemarker/employees/view";
     }
