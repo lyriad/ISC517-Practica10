@@ -21,4 +21,10 @@ public class InvoiceController {
 
         return "/freemarker/invoices/list";
     }
+
+    @GetMapping("/register")
+    public String register( Model model ) {
+
+        return "/freemarker/invoices/register";
+    }
 } 
