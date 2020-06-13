@@ -43,7 +43,7 @@
                     <i class="fas fa-fw fa-users"></i>
                     <span><@spring.message "client.plural.up" /></span></a>
                 </li>
-                <#if Session.user.hasRole('ADMIN')>
+                <#if auth.hasRole('ADMIN')>
                 <hr class="sidebar-divider">
                 <div class="sidebar-heading">
                     <@spring.message "role.admin" />
@@ -76,12 +76,12 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">
-                                    ${Session.user.getFullName()}
+                                    ${auth.getFullName()}
                                 </span>
-                                <img class="img-profile rounded-circle" src="<#if Session.user.avatar??>${Session.user.avatar}<#else>/images/avatar.png</#if>">
+                                <img class="img-profile rounded-circle" src="<#if auth.avatar??>${auth.avatar}<#else>/images/avatar.png</#if>">
                             </a>
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="/employees/${Session.user.idNumber}">
+                                <a class="dropdown-item" href="/employees/${auth.idNumber}">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     <@spring.message "base.profile" />
                                 </a>

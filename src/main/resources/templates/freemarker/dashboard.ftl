@@ -91,7 +91,7 @@
 <script>
 $(document).ready( () => {   
     $.ajax({
-        url: "/api/employees/${Session.user.id}/invoices/pending",
+        url: "/api/employees/${auth.id}/invoices/pending",
         method:'GET', 
             success: amount => {
             $('#pending-invoices-spinner').remove()
