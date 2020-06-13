@@ -24,7 +24,6 @@
                         <th><@spring.message "invoice.attr.employee.up" /></th>
                         <th><@spring.message "invoice.attr.total.up" /></th>
                         <th><@spring.message "invoice.table.rental-amount" /></th>
-                        <th><@spring.message "invoice.table.status" /></th>
                         <th style="width: 1px;"><@spring.message "action.plural.up" /></th>
                     </tr>
                 </thead>
@@ -35,7 +34,6 @@
                         <td>${invoice.employee.getFullName()}</td>
                         <td>${invoice.total?string['0']}</td>
                         <td>${invoice.rentals?size}</td>
-                        <td>${invoice.paid?string('<@spring.message "closed" />', '<@spring.message "open" />')}</td>
                         <td class="d-flex">
                             <a href="/invoices/${invoice.id}" class="btn btn-info btn-icon-split mr-2">
                                 <span class="icon text-white-50">
