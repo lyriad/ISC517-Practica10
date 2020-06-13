@@ -53,7 +53,7 @@
                             <tr role="row">
                                 <th style="flex: 1; min-width: 1px;"><@spring.message "equipment.singular.up" /></th>
                                 <th style="width: 1px;"><@spring.message "rental.attr.amount.up" /></th>
-                                <th style="width: 20%;">Cost</th>
+                                <th style="width: 20%;"><@spring.message "invoice.form.rental.cost" /></th>
                                 <th style="width: 20%;"><@spring.message "rental.attr.promisedReturnDate.up" /></th>
                                 <th style="width: 1px;"><@spring.message "action.plural.up" /></th>
                             </tr>
@@ -62,7 +62,7 @@
                         </tbody>
                     </table>
                 </div>
-                <h2 id="no-rentals-label" class="d-flex">No rentals</h2>
+                <h2 id="no-rentals-label" class="d-flex"><@spring.message "invoice.form.label.no-rentals" /></h2>
                 <h2 id="invoice-cost-label" class="d-none">Total: <span id="invoice-cost" data-amount="0"></span></h2>
             </div>
             <button type="submit" class="btn btn-primary btn-user mb-4 btn-block w-25 mx-auto" form="invoice-rentals">
@@ -100,6 +100,10 @@
                     $('#clientNotFound').removeClass().addClass('d-none');
                     $('#clientCard').removeClass().addClass('d-block');
                     $("#clientSearch").val('');
+
+                    $('#client-id').remove()
+                    const input = `<input id="client-id" type="number" name="id_client" value="`+client.id+`" readonly>`;
+                    $('#invoice-rentals').append(input);
                 }, error: () => {
                     $('#clientCard').removeClass().addClass('d-none');
                     $('#clientNotFound').removeClass().addClass('d-block');
@@ -130,7 +134,7 @@
                                 '<@spring.message "action.Add" />' +
                             '</button>' +
                             "<button class='btn btn-danger d-none' onclick='removeFromInvoice("+index+","+JSON.stringify(rental)+")' id='remove-rental-"+index+"'>" +
-                                'quitame eso' +
+                                '<@spring.message "action.Remove" />' +
                             '</button>' +
                         '</td>' +
                     '</tr>';
