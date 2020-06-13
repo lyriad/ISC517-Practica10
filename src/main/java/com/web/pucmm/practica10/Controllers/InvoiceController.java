@@ -33,8 +33,12 @@ public class InvoiceController {
     }
 
     @GetMapping("/register")
-    public String register( Model model ) {
+    public String register( Model model, Principal principal ) {
 
+        User user = userService.getLoggedUser(principal);
+
+        model.addAttribute("auth", user);
+    
         return "/freemarker/invoices/register";
     }
 } 

@@ -10,7 +10,7 @@
 </div>
 <div class="d-flex row">
     <div class="col-md-4">
-        <div class="card shadow">
+        <div class="card shadow mb-4">
             <div class="card-header py-3">
                 <h6 class="m-0 font-weight-bold text-primary"><@spring.message "client.singular.up" /></h6>
             </div>
@@ -59,24 +59,25 @@
                             </tr>
                         </thead>
                         <tbody id="rentalItems">
-                            <tr>
-                                <#--  <td>${rental.equipment.name}</td>
-                                <td>${rental.amount}</td>
-                                <td>${rental.createdAt?date}</td>
-                                <td>${rental.promisedReturnDate?date}</td>  -->
-                            </tr>
                         </tbody>
                     </table>
                 </div>
                 <h2 id="no-rentals-label" class="d-flex">No rentals</h2>
+                <h2 id="invoice-cost-label" class="d-none">Total: <span id="invoice-cost" data-amount="0"></span></h2>
             </div>
+            <button type="submit" class="btn btn-primary btn-user mb-4 btn-block w-25 mx-auto" form="invoice-rentals">
+                <@spring.message "action.Add" /> <@spring.message "invoice.singular.dn" />
+            </button>
         </div>
     </div>
 </div>
+<form id="invoice-rentals" class="d-none" method="POST" action="/invoices/register">
+</form>
 </#macro>
 
 <#macro scripts>
 <script>
+
 	$(document).ready(() => {
 
         $('#clientSearchBtn').click( () => {
@@ -106,66 +107,65 @@
             });
             $("#clientSearch").removeClass('is-invalid');
         });
-
-        const fetchRentals = idNumber => {
-            $.ajax({
-                url: '/api/rentals/client/'+idNumber+'/pending',
-                method:'GET', 
-                success: rentals => {
-
-                    rentals.forEach(rental => {
-                        const row = '<tr>' +
-                            '<td>' + rental.equipment.name + '</td>' +
-                            '<td>' + rental.amount + '</td>' +
-                            '<td>' + rental.cost + '</td>' +
-                            '<td>' + rental.promisedReturnDate.split('T')[0] + '</td>' +
-                            `<td class="d-flex">
-                                <a href="#" class="btn btn-warning btn-icon-split">
-                                    <span class="icon text-white-50">
-                                        <i class="fas fa-edit"></i>
-                                    </span>
-                                    <span class="text">Select</span>
-                                </a>
-                            </td>`+
-                            '</tr>';
-                        $('#rentalItems').append(row);
-                    })
-                    $('#rentals-table').removeClass('d-none').addClass('d-blockp');
-                    $('#no-rentals-label').removeClass().addClass('d-none');
-                }, error: () => {
-                }
-            });
-        }
-
-        /*$('#rentalAdd').click( () => {
-
-            if ($('#rentalReturnDate').val() === '') {
-                $('#rentalReturnDate').addClass('is-invalid');
-                return;
-            }
-
-            const time = Math.abs(new Date($('#rentalReturnDate').val()) - new Date());
-            const days = Math.ceil(time / (1000 * 60 * 60 * 24));
-            const cost = days * parseInt($('#rentalAmount').val()) * parseInt($('#equipmentCost').text());
-
-            const row = '<tr>' +
-                '<td>' + $('#equipmentName').text() + '</td>' +
-                '<td>' + $('#rentalAmount').val() + '</td>' +
-                '<td>' + $('#rentalReturnDate').val() + '</td>' +
-                '<td>' + cost + '</td>' +
-                '</tr>';
-            $('#rentalItems').append(row);
-
-            $('#equipmentImage').attr('src', '');
-            $('#equipmentName').text('');
-            $('#equipmentCategory').text('');
-            $('#equipmentSubcategory').text('');
-            $('#equipmentUnits').text('');
-            $('#equipmentCost').text('');
-            $('#rentalReturnDate').val('');
-            $('#equipmentCard').removeClass().addClass('d-none');
-        });*/
     });
+
+    const currencyFormat = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+    });
+
+    const fetchRentals = idNumber => {
+        $.ajax({
+            url: '/api/rentals/client/'+idNumber+'/pending',
+            method:'GET', 
+            success: rentals => {
+                rentals.forEach((rental, index) => {
+                    const row = '<tr>' +
+                        '<td>' + rental.equipment.name + '</td>' +
+                        '<td>' + rental.amount + '</td>' +
+                        '<td>' + currencyFormat.format(rental.cost) + '</td>' +
+                        '<td>' + rental.promisedReturnDate.split('T')[0] + '</td>' +
+                        '<td>' +
+                            "<button class='btn btn-success' onclick='addToInvoice("+index+","+JSON.stringify(rental)+")' id='add-rental-"+index+"'>" +
+                                '<@spring.message "action.Add" />' +
+                            '</button>' +
+                            "<button class='btn btn-danger d-none' onclick='removeFromInvoice("+index+","+JSON.stringify(rental)+")' id='remove-rental-"+index+"'>" +
+                                'quitame eso' +
+                            '</button>' +
+                        '</td>' +
+                    '</tr>';
+                    $('#rentalItems').append(row);
+                });
+                $('#rentals-table').removeClass('d-none');
+                $('#invoice-cost').text(currencyFormat.format(0))
+                $('#invoice-cost-label').removeClass('d-none');
+                $('#no-rentals-label').removeClass().addClass('d-none');
+            }, error: () => {
+            }
+        });
+    }
+
+    const addToInvoice = (index, rental) => {
+        const total = parseFloat($('#invoice-cost').attr('data-amount')) + parseFloat(rental.cost);
+        $('#invoice-cost').attr('data-amount', total);
+        $('#invoice-cost').text(currencyFormat.format(total));
+
+        $('#add-rental-'+index).addClass('d-none');
+        $('#remove-rental-'+index).removeClass('d-none');
+
+        const input = `<input id="rental-input-`+index+`" type="number" name="rentals" value="`+rental.id+`" readonly>`;
+        $('#invoice-rentals').append(input);
+    }
+
+    const removeFromInvoice = (index, rental) => {
+        const total = parseFloat($('#invoice-cost').attr('data-amount')) - parseFloat(rental.cost);
+        $('#invoice-cost').attr('data-amount', total);
+        $('#invoice-cost').text(currencyFormat.format(total));
+
+        $('#remove-rental-'+index).addClass('d-none');
+        $('#add-rental-'+index).removeClass('d-none');
+        $('#rental-input-'+index).remove();
+    }
 </script>
 
 </#macro>
