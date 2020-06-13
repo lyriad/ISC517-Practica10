@@ -1,7 +1,10 @@
 package com.web.pucmm.practica10.Controllers;
 
 import java.security.Principal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -41,7 +44,7 @@ public class InvoiceController {
     EquipmentService equipmentService;
 
     @GetMapping
-    public String list( Principal principal, Model model ) {
+    public String list(Principal principal, Model model) {
 
         User user = userService.getLoggedUser(principal);
         model.addAttribute("invoices", invoiceService.all());
@@ -51,18 +54,19 @@ public class InvoiceController {
     }
 
     @GetMapping("/register")
-    public String register( Model model, Principal principal ) {
+    public String register(Model model, Principal principal) {
 
         User user = userService.getLoggedUser(principal);
 
         model.addAttribute("auth", user);
-    
+
         return "/freemarker/invoices/register";
     }
 
     @PostMapping("/register")
     @Transactional
-    public String postRegister(Principal principal, RedirectAttributes attrs, @RequestParam(name = "rentals") long[] rentals, @RequestParam(name = "id_client") long id_client) {
+    public String postRegister(Principal principal, RedirectAttributes attrs,
+            @RequestParam(name = "rentals") long[] rentals, @RequestParam(name = "id_client") long id_client) {
 
         User client = userService.findById(id_client);
         List<Rental> myRentals = new ArrayList<>();
@@ -72,6 +76,20 @@ public class InvoiceController {
 
         for (int i = 0; i < rentals.length; i++) {
             Rental rental = rentalService.findById(rentals[i]);
+
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            String dateString = format.format(new Date());
+            Date date = new Date();
+            try {
+                date = format.parse(dateString);
+            } catch (ParseException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            rental.setRealReturnDate(date);
+            rentalService.update(rental);
+            
             Equipment equipment = rental.getEquipment();
             equipment.setCantAvailable(equipment.getCantAvailable() + rental.getAmount());
             equipmentService.update(equipment);
