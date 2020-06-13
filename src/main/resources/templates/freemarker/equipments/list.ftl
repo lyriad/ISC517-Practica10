@@ -20,12 +20,12 @@
             <table class="table table-bordered" width="100%" cellspacing="0">
                 <thead>
                     <tr role="row">
-                        <th style="flex: 1; min-width: 1px">Name</th>
-                        <th>Category</th>
-                        <th>Subcategory</th>
-                        <th>Available</th>
-                        <th>Cost per day</th>
-                        <th style="width: 1px;">Actions</th>
+                        <th style="flex: 1; min-width: 1px"><@spring.message "equipment.attr.name.up" /></th>
+                        <th><@spring.message "equipment.attr.category.up" /></th>
+                        <th><@spring.message "equipment.attr.subCategory.up" /></th>
+                        <th><@spring.message "equipment.attr.cantAvailable.up" /></th>
+                        <th><@spring.message "equipment.attr.costPerDay.up" /></th>
+                        <th style="width: 1px;"><@spring.message "action.plural.up" /></th>
                     </tr>
                 </thead>
                 <tbody>
