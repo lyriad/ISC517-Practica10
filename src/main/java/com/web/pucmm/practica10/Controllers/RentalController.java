@@ -48,6 +48,10 @@ public class RentalController {
             return "redirect:/error";
         }
 
+        if (equipment.getCantAvailable() < amount) return "redirect:/error";
+        equipment.setCantAvailable(equipment.getCantAvailable() - amount);
+        equipmentService.update(equipment);
+
         Rental rental = new Rental(equipment, client, amount, createdAtDate, promisedReturnDate);
 
         rentalService.create(rental);
