@@ -31,6 +31,10 @@ public class RentalService {
         return repository.getPendingOrdered();
     }
 
+    public List<Rental> getPendingByClient(String idNumber) {
+        return repository.getPendingByClient(idNumber);
+    }
+
     public List<Rental> getDelivered() {
         return repository.getDelivered();
     }
