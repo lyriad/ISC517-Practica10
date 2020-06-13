@@ -1,6 +1,8 @@
 package com.web.pucmm.practica10.Services;
 
 import java.util.List;
+import java.security.Principal;
+import org.springframework.security.core.userdetails.UserDetails;
 import javax.transaction.Transactional;
 import com.web.pucmm.practica10.Models.User;
 import com.web.pucmm.practica10.Repositories.UserRepository;
@@ -15,6 +17,12 @@ public class UserService {
 
     public List<User> all() {
         return repository.findAll();       
+    }
+
+    public User getLoggedUser(Principal principal) {
+        String email = principal.getName();
+        User user = repository.findByEmail(email);
+        return user;
     }
 
     public User findById(long id) {

@@ -1,14 +1,17 @@
 package com.web.pucmm.practica10.Controllers;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import com.web.pucmm.practica10.Models.Equipment;
 import com.web.pucmm.practica10.Models.Category;
 import com.web.pucmm.practica10.Models.SubCategory;
+import com.web.pucmm.practica10.Models.User;
 import com.web.pucmm.practica10.Services.FileUploadService;
 import com.web.pucmm.practica10.Services.CategoryService;
 import com.web.pucmm.practica10.Services.SubCategoryService;
+import com.web.pucmm.practica10.Services.UserService;
 import com.web.pucmm.practica10.Services.EquipmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,21 +40,29 @@ public class EquipmentController {
 
     @Autowired
     FileUploadService uploadService;
+
+    @Autowired
+    UserService userService;
     
     @GetMapping
-    public String list( Model model) {
+    public String list( Principal principal, Model model) {
 
+        User user = userService.getLoggedUser(principal);
         model.addAttribute("equipments", equipmentService.all());
+        model.addAttribute("auth", user);
 
         return "/freemarker/equipments/list";
     }
 
     @GetMapping("/register")
-    public String getRegister( Model model, @ModelAttribute("equipment") Equipment equipment, @ModelAttribute("errors") HashMap<String, String> errors) {
+    public String getRegister( Principal principal, Model model, @ModelAttribute("equipment") Equipment equipment, @ModelAttribute("errors") HashMap<String, String> errors) {
 
+        
+        User user = userService.getLoggedUser(principal);
         if (errors == null) model.addAttribute("errors", new HashMap<>());
         model.addAttribute("action", "Add");
         model.addAttribute("categories", categoryService.all());
+        model.addAttribute("auth", user);
 
         return "/freemarker/equipments/register";
     }
@@ -92,8 +103,9 @@ public class EquipmentController {
     }
 
     @GetMapping("/edit/{id_equipment}")
-    public String getEdit( Model model, @PathVariable long id_equipment, @ModelAttribute("employee") Equipment equipment, @ModelAttribute("errors") HashMap<String, String> errors ) {
-
+    public String getEdit( Principal principal, Model model, @PathVariable long id_equipment, @ModelAttribute("employee") Equipment equipment, @ModelAttribute("errors") HashMap<String, String> errors ) {
+        
+        User user = userService.getLoggedUser(principal);
         try {
             equipment.getName().isEmpty();
 
@@ -109,6 +121,7 @@ public class EquipmentController {
         model.addAttribute("categories", categories);
         model.addAttribute("equipment", equipment);
         model.addAttribute("action", "Edit");
+        model.addAttribute("auth", user);
 
         return "/freemarker/equipments/register";
     }
@@ -157,12 +170,14 @@ public class EquipmentController {
     }
 
     @GetMapping("/{id_equipment}")
-    public String getView( Model model, @PathVariable long id_equipment ) {
+    public String getView( Principal principal, Model model, @PathVariable long id_equipment ) {
 
+        User user = userService.getLoggedUser(principal);
         Equipment equipment = equipmentService.findById(id_equipment);
         if ( equipment == null) return "redirect:/error";
 
         model.addAttribute("equipment", equipment);
+        model.addAttribute("auth", user);
 
         return "/freemarker/equipments/view";
     }
