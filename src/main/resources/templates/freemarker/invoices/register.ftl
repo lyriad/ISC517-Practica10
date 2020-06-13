@@ -123,6 +123,7 @@
             url: '/api/rentals/client/'+idNumber+'/pending',
             method:'GET', 
             success: rentals => {
+                $('#rentalItems').empty();
                 rentals.forEach((rental, index) => {
                     const row = '<tr>' +
                         '<td>' + rental.equipment.name + '</td>' +
